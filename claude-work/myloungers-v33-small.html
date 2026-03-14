@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MyLoungers</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0A1628;--navy2:#112240;--teal:#0ABAB5;--teal-lt:#E0F7F6;--teal-dk:#089490;
+  --orange:#F5821F;--ink:#111;--ink2:#444;--ink3:#777;
+  --border:#E5EBF0;--bg:#fff;--soft:#F4F8FB;--r:10px;--rl:16px;
+  --sh:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.08);
+  --shl:0 4px 16px rgba(0,0,0,.06),0 20px 56px rgba(0,0,0,.10)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.nav{position:sticky;top:0;z-index:300;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-in{max-width:1400px;margin:0 auto;padding:0 28px;height:72px;display:flex;align-items:center;gap:20px}
+.logo-img{height:80px;width:auto;display:block;flex-shrink:0}
+.nav-cats{display:flex;gap:4px;flex:1;justify-content:center}
+.nc{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:50px;font-size:.78rem;font-weight:600;color:var(--ink2);background:none;border:1.5px solid transparent;cursor:pointer;transition:all .18s;white-space:nowrap}
+.nc svg{width:16px;height:16px;flex-shrink:0;opacity:.65;transition:opacity .18s}
+.nc.on,.nc:hover{color:var(--navy);background:var(--teal-lt);border-color:var(--teal)}
+.nc.on svg,.nc:hover svg{opacity:1}
+.nav-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.btn-login{padding:8px 18px;border-radius:50px;font-size:.82rem;font-weight:600;color:var(--ink);background:none;border:1.5px solid var(--border);cursor:pointer;transition:border-color .15s}
+.btn-login:hover{border-color:var(--ink3)}
+.btn-signup{padding:9px 20px;border-radius:50px;font-size:.82rem;font-weight:700;color:#fff;background:var(--navy);border:none;cursor:pointer}
+.ham{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin-left:auto;flex-shrink:0}
+.ham span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .25s}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-cats{display:none;background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:sticky;top:72px;z-index:200}
+.mob-cats::-webkit-scrollbar{display:none}
+.mob-cats-in{display:flex;gap:6px;padding:8px 14px;width:max-content}
+.mcat{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:50px;font-size:.72rem;font-weight:600;color:var(--ink3);background:var(--soft);border:1.5px solid var(--border);cursor:pointer;white-space:nowrap;transition:all .15s}
+.mcat svg{width:14px;height:14px;flex-shrink:0}
+.mcat.on,.mcat:active{color:var(--navy);background:var(--teal-lt);border-color:var(--teal)}
+.mob-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;background:rgba(0,0,0,.5)}
+.mob-menu.open{display:block}
+.mob-panel{position:absolute;top:0;right:0;bottom:0;width:280px;background:#fff;overflow-y:auto;transform:translateX(100%);transition:transform .28s ease}
+.mob-menu.open .mob-panel{transform:translateX(0)}
+.mob-panel-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.mob-panel-logo{height:44px}
+.mob-close{background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--ink3);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.mob-btns{display:flex;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.mob-btns button{flex:1;padding:11px;border-radius:var(--r);font-size:.85rem;font-weight:700;cursor:pointer}
+.mob-btn-login{background:var(--soft);color:var(--ink);border:1.5px solid var(--border)}
+.mob-btn-signup{background:var(--navy);color:#fff;border:none}
+.mob-sec-title{font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding:14px 18px 6px}
+.mob-link{width:calc(100% - 12px);margin:0 6px;padding:12px 18px;font-size:.86rem;font-weight:500;color:var(--ink2);border:none;background:none;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:background .12s;border-radius:var(--r)}
+.mob-link:hover{background:var(--soft)}
+.mob-link svg{width:17px;height:17px;color:var(--ink3);flex-shrink:0}
+/* LANG */
+.lang-wrap{position:relative;flex-shrink:0}
+.lang-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:50px;font-size:.78rem;font-weight:600;color:var(--ink2);background:none;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;white-space:nowrap}
+.lang-btn:hover{border-color:var(--ink3);background:var(--soft)}
+.lang-btn .flag{font-size:1rem;line-height:1}
+.lang-btn .chevron{width:12px;height:12px;transition:transform .2s;opacity:.5}
+.lang-wrap.open .chevron{transform:rotate(180deg)}
+.lang-drop{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1.5px solid var(--border);border-radius:var(--rl);box-shadow:var(--shl);min-width:160px;overflow:hidden;z-index:99;padding:4px}
+.lang-wrap.open .lang-drop{display:block}
+.lang-opt{width:100%;padding:9px 12px;font-size:.8rem;font-weight:500;color:var(--ink2);background:none;border:none;cursor:pointer;text-align:left;display:flex;align-items:center;gap:9px;transition:background .12s;border-radius:8px}
+.lang-opt:hover{background:var(--soft)}
+.lang-opt.active{color:var(--navy);font-weight:700;background:var(--teal-lt)}
+.lang-opt .lname{flex:1}
+.lang-opt .lcheck{color:var(--teal);font-size:.8rem;display:none}
+.lang-opt.active .lcheck{display:block}
+/* SLIDER */
+.bwrap{position:relative;overflow:hidden;width:100%;background:#111;line-height:0}
+.slide{display:none;width:100%}
+.slide.on{display:block}
+.slide-img{display:block;width:100%;height:600px;object-fit:cover;object-position:center}
+.sarr{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.38);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-size:1.3rem;cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center}
+.sarr.prev{left:14px}.sarr.next{right:14px}
+.sdots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;border:none;padding:0;transition:all .3s}
+.dot.on{background:#fff;width:24px;border-radius:4px}
+.bprog{height:3px;background:rgba(255,255,255,.15);position:absolute;bottom:0;left:0;right:0;z-index:20}
+.bbar{height:100%;background:var(--teal);width:0%}
+/* SEARCH */
+.srch-wrap{background:#fff;border-bottom:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.srch-in{max-width:1400px;margin:0 auto;padding:14px 24px}
+.srch-card{border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:stretch;overflow:hidden;box-shadow:var(--sh)}
+.sf{flex:1;display:flex;flex-direction:column;justify-content:center;padding:13px 16px;border-right:1px solid var(--border);cursor:pointer;background:#fff;min-width:0;transition:background .15s}
+.sf:hover{background:var(--teal-lt)}
+.sf:last-of-type{border-right:none}
+.sfl{font-size:.55rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:3px}
+.sfv{font-size:.8rem;color:var(--ink3);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srch-btn{background:var(--teal);color:#fff;border:none;padding:0 26px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:7px}
+.srch-btn:hover{background:var(--teal-dk)}
+/* STATS */
+.stats{background:var(--navy)}
+.stats-in{max-width:1400px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px;overflow-x:auto;scrollbar-width:none}
+.stats-in::-webkit-scrollbar{display:none}
+.stn{font-size:1.2rem;font-weight:900;letter-spacing:-.03em;color:#fff;white-space:nowrap}
+.stl{font-size:.66rem;color:rgba(255,255,255,.48);white-space:nowrap}
+.std{width:1px;height:24px;background:rgba(255,255,255,.14);flex-shrink:0}
+.sec{max-width:1400px;margin:0 auto;padding:48px 24px}
+.sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.sec-h{font-size:1.3rem;font-weight:800;letter-spacing:-.025em}
+.sec-a{font-size:.8rem;font-weight:700;color:var(--teal-dk);text-decoration:none}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cat-card{border-radius:var(--rl);overflow:hidden;position:relative;cursor:pointer;aspect-ratio:3/2;transition:transform .22s,box-shadow .22s}
+.cat-card:hover{transform:translateY(-4px);box-shadow:var(--shl)}
+.cat-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.cat-card:hover img{transform:scale(1.05)}
+.cat-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,22,40,.88) 0%,rgba(0,0,0,.04) 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.cat-name{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:3px}
+.cat-sub{font-size:.72rem;color:rgba(255,255,255,.72)}
+.cat-badge{position:absolute;top:10px;right:10px;color:#fff;font-size:.6rem;font-weight:800;padding:3px 9px;border-radius:50px}
+.ct{background:var(--teal)}.co{background:var(--orange)}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pc{cursor:pointer}
+.pw0{position:relative;border-radius:var(--rl);overflow:hidden;aspect-ratio:3/2;margin-bottom:9px}
+.pw0 img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.pc:hover .pw0 img{transform:scale(1.05)}
+.pfav{position:absolute;top:9px;right:9px;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);border:none;cursor:pointer;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.prat{position:absolute;top:9px;left:9px;background:rgba(0,0,0,.48);backdrop-filter:blur(4px);color:#fff;font-size:.63rem;font-weight:700;padding:3px 9px;border-radius:50px}
+.ptag{position:absolute;bottom:9px;left:9px;color:#fff;font-size:.6rem;font-weight:700;padding:3px 9px;border-radius:50px}
+.pn{font-size:.88rem;font-weight:700;margin-bottom:3px}
+.pl{font-size:.73rem;color:var(--ink3);margin-bottom:6px}
+.pf{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.pfc{background:var(--soft);border:1px solid var(--border);border-radius:50px;padding:2px 8px;font-size:.63rem;color:var(--ink2);font-weight:500}
+.pp b{font-weight:800;font-size:.88rem;color:var(--navy)}
+.pp span{font-size:.73rem;color:var(--ink3)}
+.how{background:linear-gradient(160deg,#070F1E 0%,#0A1628 55%,#0B1F3A 100%);padding:80px 24px;position:relative;overflow:hidden}
+.how::before{content:'';position:absolute;top:-150px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(10,186,181,.09) 0%,transparent 70%);pointer-events:none}
+.how::after{content:'';position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(245,130,31,.06) 0%,transparent 70%);pointer-events:none}
+.how-in{max-width:1200px;margin:0 auto}
+.how-ttl{font-size:2rem;font-weight:900;letter-spacing:-.04em;color:#fff;margin-bottom:6px}
+.how-ttl span{color:var(--teal)}
+.how-sub{font-size:.85rem;color:rgba(255,255,255,.38);margin-bottom:52px}
+.hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.how-in{max-width:1400px;margin:0 auto}
+.how-ttl{font-size:1.5rem;font-weight:900;letter-spacing:-.03em;color:#fff;margin-bottom:5px}
+.how-sub{font-size:.82rem;color:rgba(255,255,255,.35);margin-bottom:36px}
+.hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border-radius:var(--rl);overflow:hidden}
+.hs{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px 26px;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden}
+.hs::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,186,181,.07),transparent);opacity:0;transition:opacity .2s;pointer-events:none}
+.hs:hover{border-color:rgba(10,186,181,.35);transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.3)}
+.hs:hover::before{opacity:1}
+.hs:nth-child(2){background:rgba(245,130,31,.05);border-color:rgba(245,130,31,.1)}
+.hs:nth-child(2)::before{background:linear-gradient(135deg,rgba(245,130,31,.08),transparent)}
+.hs:nth-child(2):hover{border-color:rgba(245,130,31,.35)}
+.hn{font-size:.6rem;font-weight:900;letter-spacing:.14em;color:var(--teal);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.hs:nth-child(2) .hn{color:var(--orange)}
+.hs:nth-child(3) .hn{color:#A78BFA}
+.hn-num{width:22px;height:22px;border-radius:50%;background:rgba(10,186,181,.15);border:1px solid rgba(10,186,181,.3);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:900;color:var(--teal);flex-shrink:0}
+.hs:nth-child(2) .hn-num{background:rgba(245,130,31,.15);border-color:rgba(245,130,31,.3);color:var(--orange)}
+.hs:nth-child(3) .hn-num{background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.3);color:#A78BFA}
+.hn::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.hi{font-size:2.2rem;margin-bottom:14px;display:block;line-height:1}
+.hs h3{font-size:1.05rem;font-weight:900;color:#fff;margin-bottom:8px;letter-spacing:-.02em}
+.hs p{font-size:.78rem;color:rgba(255,255,255,.42);line-height:1.65;margin-bottom:18px}
+.hs-points{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.hs-point{display:flex;align-items:flex-start;gap:8px;font-size:.76rem;color:rgba(255,255,255,.6);line-height:1.5}
+.hs-point-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0;margin-top:6px}
+.hs:nth-child(2) .hs-point-dot{background:var(--orange)}
+.hs:nth-child(3) .hs-point-dot{background:#A78BFA}
+.hs-tag{display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:800;padding:5px 11px;border-radius:50px;background:rgba(10,186,181,.12);color:var(--teal);border:1px solid rgba(10,186,181,.2)}
+.hs:nth-child(2) .hs-tag{background:rgba(245,130,31,.12);color:var(--orange);border-color:rgba(245,130,31,.22)}
+.hs:nth-child(3) .hs-tag{background:rgba(167,139,250,.12);color:#A78BFA;border-color:rgba(167,139,250,.22)}
+.how-cta{text-align:center;margin-top:52px}
+.how-cta-btn{background:linear-gradient(135deg,var(--teal),#089490);color:#fff;border:none;border-radius:14px;padding:15px 38px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:'GR',sans-serif;transition:all .18s;display:inline-flex;align-items:center;gap:9px;box-shadow:0 4px 24px rgba(10,186,181,.32)}
+.how-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(10,186,181,.44)}
+.how-cta-sub{font-size:.72rem;color:rgba(255,255,255,.28);margin-top:10px}
+.hn{font-size:.57rem;font-weight:800;letter-spacing:.12em;color:var(--teal);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.hn::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
+.hi{font-size:1.6rem;margin-bottom:9px;display:block}
+.hs h3{font-size:.86rem;font-weight:700;color:#fff;margin-bottom:5px}
+.hs p{font-size:.75rem;color:rgba(255,255,255,.37);line-height:1.75}
+.plan-sec{max-width:1400px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.plan-k{display:inline-flex;align-items:center;gap:6px;font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:10px}
+.plan-k::before{content:'';width:14px;height:2px;background:var(--teal)}
+.plan-sec h2{font-size:1.4rem;font-weight:900;letter-spacing:-.03em;line-height:1.12;margin-bottom:10px}
+.pdesc{font-size:.82rem;color:var(--ink2);line-height:1.8;margin-bottom:16px}
+.cl{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
+.cl li{display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:500}
+.cl li::before{content:'✓';width:16px;height:16px;border-radius:50%;flex-shrink:0;background:var(--teal-lt);color:var(--teal-dk);font-size:.54rem;font-weight:900;display:flex;align-items:center;justify-content:center}
+.btn-solid{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;padding:11px 20px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1.5px solid var(--border);padding:10px 16px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer}
+.pww{border:1.5px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--shl)}
+.pwt{padding:12px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.pwn{font-size:.82rem;font-weight:700}
+.pwd{font-size:.63rem;color:var(--ink3);background:var(--soft);padding:3px 8px;border-radius:50px;font-weight:600}
+.pwb{padding:12px 15px}
+.pwc{font-size:.53rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:6px;margin-top:10px}
+.pwc:first-child{margin-top:0}
+.lrow{display:flex;flex-wrap:wrap;gap:4px}
+.l{width:26px;height:19px;border-radius:4px;font-size:.51rem;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent}
+.lok{background:#F0FFF4;color:#16A34A;border-color:#BBF7D0}
+.lno{background:#FFF5F5;color:#E53E3E;border-color:#FED7D7}
+.lsel{background:var(--teal);color:#fff}
+.lpnd{background:#FFFBEB;color:#D97706;border-color:#FDE68A}
+.lgold{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
+.pwleg{padding:7px 15px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap}
+.pwl{display:flex;align-items:center;gap:4px;font-size:.63rem;color:var(--ink3)}
+.pwld{width:8px;height:8px;border-radius:2px}
+.b2b{background:var(--soft);border-top:1px solid var(--border);padding:60px 24px}
+.b2b-in{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:start}
+.b2b-in h2{font-size:1.4rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:10px}
+.b2b-in .desc{font-size:.82rem;color:var(--ink2);line-height:1.8;margin-bottom:16px}
+.b2b-acts{display:flex;gap:10px;flex-wrap:wrap}
+.b2bcards{display:flex;flex-direction:column;gap:9px}
+.b2bc{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:13px;display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start;cursor:pointer;transition:border-color .18s}
+.b2bc:hover{border-color:var(--teal)}
+.b2bi{width:32px;height:32px;border-radius:var(--r);background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.b2bc h4{font-size:.79rem;font-weight:700;margin-bottom:2px}
+.b2bc p{font-size:.71rem;color:var(--ink3);line-height:1.6}
+.rev{max-width:1400px;margin:0 auto;padding:60px 24px}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.rc{border:1.5px solid var(--border);border-radius:var(--rl);padding:18px}
+.rc-dest{font-size:.63rem;font-weight:700;color:var(--teal);margin-bottom:7px}
+.rc-stars{color:#F59E0B;font-size:.72rem;letter-spacing:2px;margin-bottom:7px}
+.rc-text{font-size:.79rem;line-height:1.8;color:var(--ink2);margin-bottom:11px}
+.rc-auth{display:flex;align-items:center;gap:8px}
+.rc-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:var(--teal-lt);font-size:.63rem;font-weight:800;color:var(--teal-dk);display:flex;align-items:center;justify-content:center}
+.rc-name{font-size:.78rem;font-weight:700}
+.rc-loc{font-size:.65rem;color:var(--ink3);margin-top:1px}
+footer{background:var(--navy);padding:48px 24px 22px}
+.ft{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:14px}
+.fl-logo{height:52px;width:auto;margin-bottom:11px;display:block;filter:brightness(0) invert(1)}
+.fd{font-size:.74rem;color:rgba(255,255,255,.4);line-height:1.75;max-width:200px;margin-bottom:12px}
+.fa{display:flex;gap:6px;flex-wrap:wrap}
+.fapp{display:flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.15);border-radius:var(--r);padding:5px 9px;text-decoration:none}
+.fcol h5{font-size:.59rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.34);margin-bottom:11px}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.fcol a{font-size:.75rem;color:rgba(255,255,255,.48);text-decoration:none}
+.fcol a:hover{color:#fff}
+.fb{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;font-size:.69rem;color:rgba(255,255,255,.26)}
+/* MODAL */
+.basvuru-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(10,22,40,.75);backdrop-filter:blur(6px);overflow-y:auto;padding:24px 16px}
+.basvuru-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.basvuru-modal{background:#fff;border-radius:20px;width:100%;max-width:1020px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);margin:auto;display:grid;grid-template-columns:300px 1fr;position:relative}
+.bm-close-btn{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .15s}
+.bm-close-btn:hover{background:rgba(255,255,255,.25)}
+.bm-left{background:var(--navy);padding:32px 24px;display:flex;flex-direction:column}
+.bm-tag{display:inline-flex;background:rgba(10,186,181,.15);border:1px solid rgba(10,186,181,.3);color:var(--teal);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-bottom:14px;width:fit-content}
+.bm-ttl{font-size:1.4rem;font-weight:900;letter-spacing:-.04em;color:#fff;line-height:1.1;margin-bottom:8px}
+.bm-ttl span{color:var(--teal)}
+.bm-desc{font-size:.75rem;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:20px}
+.bm-feats{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.bm-feat{display:flex;align-items:flex-start;gap:10px;padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:var(--r);background:rgba(255,255,255,.03)}
+.bm-feat-ico{width:32px;height:32px;border-radius:8px;background:rgba(10,186,181,.15);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.bm-feat-ttl{font-size:.76rem;font-weight:700;color:#fff;margin-bottom:1px}
+.bm-feat-desc{font-size:.66rem;color:rgba(255,255,255,.38);line-height:1.4}
+.bm-ref{background:rgba(255,255,255,.05);border-radius:var(--r);padding:13px;margin-bottom:16px}
+.bm-ref-stars{color:#F59E0B;font-size:.68rem;letter-spacing:2px;margin-bottom:7px}
+.bm-ref-text{font-size:.73rem;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:10px;font-style:italic}
+.bm-ref-auth{display:flex;align-items:center;gap:8px}
+.bm-ref-av{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;font-size:.62rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bm-ref-name{font-size:.75rem;font-weight:700;color:#fff}
+.bm-ref-role{font-size:.62rem;color:rgba(255,255,255,.38)}
+.bm-trust{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+.bm-trust-item{display:flex;align-items:center;gap:4px;font-size:.62rem;color:rgba(255,255,255,.4);font-weight:600}
+.bm-trust-item svg{width:11px;height:11px;color:var(--teal)}
+.bm-right{padding:24px;overflow-y:auto;max-height:88vh}
+.bm-steps{display:flex;background:var(--soft);border-radius:var(--r);overflow:hidden;margin-bottom:16px}
+.bm-step{flex:1;padding:10px 6px;text-align:center;border-bottom:2px solid transparent;transition:border-color .2s}
+.bm-step.active{border-bottom-color:var(--teal)}
+.bm-step.done{border-bottom-color:var(--teal-dk)}
+.bm-sn{width:20px;height:20px;border-radius:50%;font-size:.58rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 3px;background:var(--border);color:var(--ink3);transition:all .2s}
+.bm-step.active .bm-sn{background:var(--teal);color:#fff}
+.bm-step.done .bm-sn{background:var(--teal-dk);color:#fff}
+.bm-sl{font-size:.56rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.bm-step.active .bm-sl{color:var(--teal-dk)}
+.bm-prog{height:3px;background:var(--border);border-radius:2px;margin-bottom:18px}
+.bm-pb{height:100%;background:linear-gradient(to right,var(--teal-dk),var(--teal));width:33%;transition:width .4s ease;border-radius:2px}
+.bm-pane{display:none}.bm-pane.on{display:block}
+.bm-pttl{font-size:.92rem;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
+.bm-psub{font-size:.71rem;color:var(--ink3);margin-bottom:16px;line-height:1.5}
+.bfg{margin-bottom:13px}
+.bfg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.bfl{display:block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:4px}
+.bfi,.bfs,.bft{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.8rem;color:var(--ink);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+.bfi:focus,.bfs:focus,.bft:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,186,181,.1)}
+.bfi::placeholder,.bft::placeholder{color:var(--ink3)}
+.bft{resize:vertical;min-height:66px;line-height:1.5}
+.bfs{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23777' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.biw{position:relative}.biw .bfi{padding-left:34px}
+.biw svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--ink3)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:3px}
+.tbtn{padding:9px 6px;border:1.5px solid var(--border);border-radius:var(--r);font-size:.68rem;font-weight:600;color:var(--ink3);background:#fff;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tbtn .ti{font-size:1.1rem}
+.tbtn.sel{border-color:var(--teal);background:var(--teal-lt);color:var(--navy)}
+.cap-w{display:flex;align-items:center;gap:12px}
+.cap-s{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer}
+.cap-s::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer;box-shadow:0 1px 4px rgba(10,186,181,.4)}
+.cap-v{min-width:38px;text-align:center;font-size:.82rem;font-weight:800;color:var(--navy);background:var(--teal-lt);padding:3px 9px;border-radius:var(--r)}
+.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.chk{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.75rem;color:var(--ink2);padding:7px 9px;border:1.5px solid var(--border);border-radius:var(--r);transition:border-color .12s,background .12s;user-select:none}
+.chk:has(input:checked){border-color:var(--teal);background:var(--teal-lt)}
+.chk input{width:14px;height:14px;accent-color:var(--teal);cursor:pointer;flex-shrink:0}
+.copts{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.copt{padding:9px;border:1.5px solid var(--border);border-radius:var(--r);font-size:.72rem;font-weight:600;color:var(--ink3);background:#fff;cursor:pointer;text-align:center;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.copt.sel{border-color:var(--teal);background:var(--teal-lt);color:var(--navy)}
+.bm-nav{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.bm-prev{display:flex;align-items:center;gap:5px;padding:9px 16px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.79rem;font-weight:600;color:var(--ink3);background:none;border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+.bm-prev:hover{border-color:var(--ink3);color:var(--ink)}
+.bm-next{display:flex;align-items:center;gap:5px;padding:10px 22px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;color:#fff;background:var(--teal);border:none;cursor:pointer;transition:background .15s}
+.bm-next:hover{background:var(--teal-dk)}
+.bm-sub{display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 24px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;color:#fff;background:var(--navy);border:none;cursor:pointer;width:100%;transition:background .15s;margin-bottom:8px}
+.bm-sub:hover{background:var(--navy2)}
+.bm-ok{text-align:center;padding:36px 16px}
+.bm-ok-ico{width:60px;height:60px;border-radius:50%;background:var(--teal-lt);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.7rem}
+.bm-ok h3{font-size:1.1rem;font-weight:800;margin-bottom:7px}
+.bm-ok p{font-size:.79rem;color:var(--ink3);line-height:1.7;max-width:240px;margin:0 auto 18px}
+.bm-ok-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.8rem;font-weight:700;color:#fff;background:var(--teal);border:none;cursor:pointer}
+@media(max-width:1024px){.pgrid{grid-template-columns:repeat(2,1fr)}.ft{grid-template-columns:repeat(2,1fr)}.plan-sec{grid-template-columns:1fr;gap:22px}.b2b-in{grid-template-columns:1fr;gap:22px}}
+@media(max-width:768px){.nav-cats,.nav-r{display:none}.ham{display:flex}.nav-in{padding:0 14px;height:62px}.logo-img{height:52px}.mob-cats{display:block;top:62px}.slide-img{height:260px}.sarr{display:none}.srch-card{flex-direction:column;border-radius:var(--r)}.sf{border-right:none;border-bottom:1px solid var(--border);padding:10px 13px}.sf:last-of-type{border-bottom:none}.srch-btn{padding:12px;justify-content:center}.sec{padding:24px 14px}.cat-grid{grid-template-columns:1fr;gap:10px}.cat-card{aspect-ratio:16/7}.pgrid{grid-template-columns:1fr;gap:12px}.pw0{aspect-ratio:16/7}.how{padding:32px 14px}.hgrid{grid-template-columns:1fr}.plan-sec{padding:32px 14px}.b2b{padding:32px 14px}.b2b-in{grid-template-columns:1fr}.rev{padding:32px 14px}.rgrid{grid-template-columns:1fr}footer{padding:28px 14px 14px}.ft{grid-template-columns:1fr 1fr;gap:18px}.fb{flex-direction:column;gap:5px;text-align:center}.basvuru-modal{grid-template-columns:1fr}.bm-left{display:none}.bm-right{max-height:none;padding:20px}}
+@media(max-width:480px){.nav-in{height:56px}.logo-img{height:46px}.mob-cats{top:56px}.slide-img{height:55vw;min-height:180px;max-height:250px}.tgrid{grid-template-columns:repeat(2,1fr)}.bfg2{grid-template-columns:1fr}.chk-grid{grid-template-columns:1fr}.copts{grid-template-columns:1fr 1fr}footer{padding:24px 14px 12px}.ft{grid-template-columns:1fr;gap:16px}}
+
+/* ══ FİLTRE BUTONU ══ */
+.filter-btn{display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--border);border-radius:0 12px 12px 0;padding:0 20px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;color:var(--ink);cursor:pointer;transition:all .15s;position:relative;flex-shrink:0;border-left:1px solid var(--border)}
+.filter-btn:hover{background:var(--soft);border-color:var(--ink3)}
+.filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.filter-badge{background:var(--teal);color:#fff;font-size:.6rem;font-weight:800;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.filter-btn.active .filter-badge{background:#fff;color:var(--navy)}
+
+/* ══ FİLTRE PANEL ══ */
+.filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:600;backdrop-filter:blur(2px)}
+.filter-overlay.open{display:block}
+.filter-panel{position:fixed;top:0;right:0;bottom:0;width:360px;background:#fff;z-index:700;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.15)}
+.filter-panel.open{transform:translateX(0)}
+.fp-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.fp-title{display:flex;align-items:center;gap:9px;font-size:1rem;font-weight:800;color:var(--navy)}
+.fp-close{background:none;border:1.5px solid var(--border);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:.9rem;color:var(--ink3);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.fp-close:hover{background:var(--soft);border-color:var(--ink3)}
+.fp-body{flex:1;overflow-y:auto;padding:8px 0}
+.fp-body::-webkit-scrollbar{width:4px}
+.fp-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.fp-section{padding:16px 20px;border-bottom:1px solid var(--border)}
+.fp-section:last-child{border-bottom:none}
+.fp-sec-title{font-size:.65rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.fp-sort-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fp-sort-btn{padding:9px 10px;border:1.5px solid var(--border);border-radius:var(--r);font-size:.76rem;font-weight:600;color:var(--ink3);background:#fff;cursor:pointer;text-align:center;transition:all .15s;font-family:'Inter',sans-serif}
+.fp-sort-btn:hover{border-color:var(--teal);color:var(--navy)}
+.fp-sort-btn.sel{border-color:var(--teal);background:var(--teal-lt);color:var(--navy);font-weight:700}
+.fp-price-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.fp-price-box{flex:1;background:var(--soft);border-radius:var(--r);padding:8px 12px;text-align:center}
+.fp-price-lbl{display:block;font-size:.58rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.fp-price-val{font-size:.88rem;font-weight:800;color:var(--navy)}
+.fp-price-sep{color:var(--ink3);font-weight:600}
+.fp-range-wrap{position:relative;height:24px;display:flex;flex-direction:column;gap:0;justify-content:center}
+.fp-range{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--teal-lt);outline:none;cursor:pointer;position:absolute}
+.fp-range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--teal);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer}
+.fp-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--teal);border:2px solid #fff;cursor:pointer}
+#priceMin{z-index:2}
+#priceMax{z-index:1}
+.fp-stars-row{display:flex;gap:8px;flex-wrap:wrap}
+.fp-star-btn{padding:7px 14px;border:1.5px solid var(--border);border-radius:50px;font-size:.76rem;font-weight:600;color:var(--ink3);background:#fff;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.fp-star-btn:hover{border-color:var(--teal);color:var(--navy)}
+.fp-star-btn.sel{border-color:var(--teal);background:var(--teal-lt);color:var(--navy);font-weight:700}
+.fp-chips{display:flex;flex-wrap:wrap;gap:8px}
+.fp-chip{padding:7px 13px;border:1.5px solid var(--border);border-radius:50px;font-size:.76rem;font-weight:600;color:var(--ink3);background:#fff;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;white-space:nowrap}
+.fp-chip:hover{border-color:var(--teal);color:var(--navy)}
+.fp-chip.sel{border-color:var(--teal);background:var(--teal-lt);color:var(--navy);font-weight:700}
+.fp-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0}
+.fp-clear-btn{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:var(--r);font-size:.85rem;font-weight:700;color:var(--ink3);background:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.fp-clear-btn:hover{border-color:var(--ink3);color:var(--ink)}
+.fp-apply-btn{flex:2;padding:12px;border:none;border-radius:var(--r);font-size:.85rem;font-weight:700;color:#fff;background:var(--teal);cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.fp-apply-btn:hover{background:var(--teal-dk)}
+.fp-gps-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:11px;border:1.5px solid var(--teal);border-radius:var(--r);background:rgba(10,186,181,.05);color:var(--teal);font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.fp-gps-btn:hover{background:rgba(10,186,181,.12)}
+.fp-gps-btn.active{background:var(--teal);color:#fff}
+.fp-gps-clear{margin-top:10px;background:none;border:none;font-size:.72rem;color:var(--ink3);cursor:pointer;font-family:'Inter',sans-serif;padding:0;text-decoration:underline}
+.fp-gps-clear:hover{color:var(--ink)}
+@media(max-width:480px){.filter-panel{width:100%}.filter-btn span:not(.filter-badge){display:none}.filter-btn{padding:0 14px}}
+.srch-wrap{background:#fff;border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.srch-in{max-width:1400px;margin:0 auto;padding:14px 24px}
+.srch-card{border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:stretch;overflow:visible;box-shadow:var(--sh);position:relative;background:#fff;z-index:60}
+.sf{flex:1;display:flex;flex-direction:column;justify-content:center;padding:13px 16px;border-right:1px solid var(--border);cursor:pointer;background:#fff;min-width:0;transition:background .15s;position:relative;border-radius:0}
+.sf:first-child{border-radius:12px 0 0 12px}
+.sf:last-of-type{border-right:none}
+.sf.active{background:var(--teal-lt);z-index:10}
+.sf.active .sfl{color:var(--teal-dk)}
+.sfl{font-size:.55rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:3px;transition:color .15s}
+.sfv{font-size:.8rem;color:var(--ink3);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sfv.selected{color:var(--navy);font-weight:600}
+.srch-btn{background:var(--teal);color:#fff;border:none;padding:0 26px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:7px;border-radius:0 12px 12px 0;transition:background .15s}
+.srch-btn:hover{background:var(--teal-dk)}
+
+/* Dropdown paneller */
+.sf-panel{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1.5px solid var(--border);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:500;min-width:340px;overflow:visible}
+.sf-panel.open{display:block}
+.sf-panel-inn{padding:16px}
+
+/* Bölge paneli */
+.region-panel{min-width:420px}
+.region-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:260px}
+.region-iller{border-right:1px solid var(--border);padding:8px 0;max-height:320px;overflow-y:auto;position:relative;z-index:1}
+.region-ilceler{padding:8px 0;max-height:320px;overflow-y:auto;position:relative;z-index:1}
+.region-iller::-webkit-scrollbar,.region-ilceler::-webkit-scrollbar{width:4px}
+.region-iller::-webkit-scrollbar-thumb,.region-ilceler::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.r-search{padding:6px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.r-search input{flex:1;border:none;outline:none;font-size:.78rem;font-family:'Inter',sans-serif;color:var(--ink)}
+.r-search svg{width:13px;height:13px;color:var(--ink3);flex-shrink:0}
+.r-item{padding:8px 14px;font-size:.79rem;font-weight:500;color:var(--ink2);cursor:pointer;transition:background .12s;display:flex;align-items:center;justify-content:space-between;white-space:nowrap}
+.r-item:hover{background:var(--soft)}
+.r-item.active{background:var(--teal-lt);color:var(--navy);font-weight:700}
+.r-item .r-arr{opacity:.3;font-size:.7rem}
+.r-item.active .r-arr{opacity:1;color:var(--teal)}
+.r-ilce-ttl{font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:4px 14px 8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.r-ilce-item{padding:8px 14px;font-size:.78rem;color:var(--ink2);cursor:pointer;transition:background .12s}
+.r-ilce-item:hover{background:var(--soft)}
+.r-ilce-item.sel{background:var(--teal-lt);color:var(--navy);font-weight:600}
+.r-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.r-footer-val{font-size:.75rem;color:var(--teal-dk);font-weight:600}
+.r-btn-clear{font-size:.72rem;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif}
+.r-btn-ok{font-size:.75rem;font-weight:700;color:#fff;background:var(--teal);border:none;padding:6px 14px;border-radius:var(--r);cursor:pointer;font-family:'Inter',sans-serif}
+
+/* Tesis tipi paneli */
+.type-panel{min-width:320px}
+.type-grid-p{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 0}
+.tp-btn{padding:11px 10px;border:1.5px solid var(--border);border-radius:var(--r);font-size:.76rem;font-weight:600;color:var(--ink3);background:#fff;cursor:pointer;text-align:center;transition:all .15s;display:flex;align-items:center;gap:8px}
+.tp-btn .tpico{font-size:1.1rem}
+.tp-btn.sel{border-color:var(--teal);background:var(--teal-lt);color:var(--navy)}
+.tp-footer{padding:10px 0 0;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--border);margin-top:10px}
+
+/* Tarih paneli */
+.date-panel{min-width:300px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-month{font-size:.85rem;font-weight:700}
+.cal-nav{background:none;border:1.5px solid var(--border);border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--ink3)}
+.cal-nav:hover{border-color:var(--ink3)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day-lbl{font-size:.6rem;font-weight:700;color:var(--ink3);text-align:center;padding:3px 0;text-transform:uppercase}
+.cal-day{font-size:.75rem;font-weight:500;color:var(--ink2);text-align:center;padding:6px 2px;border-radius:6px;cursor:pointer;transition:all .15s;border:none;background:none;font-family:'Inter',sans-serif}
+.cal-day:hover:not(.disabled):not(.empty){background:var(--teal-lt);color:var(--navy)}
+.cal-day.sel{background:var(--teal);color:#fff;font-weight:700}
+.cal-day.today{font-weight:800;color:var(--teal-dk)}
+.cal-day.disabled{color:var(--border);cursor:default}
+.cal-day.empty{cursor:default}
+
+/* Tesis adı paneli */
+.name-panel{min-width:280px}
+.name-inp-wrap{display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:var(--r);padding:9px 12px;margin-bottom:10px;transition:border-color .15s}
+.name-inp-wrap:focus-within{border-color:var(--teal)}
+.name-inp-wrap svg{width:15px;height:15px;color:var(--ink3);flex-shrink:0}
+.name-inp{flex:1;border:none;outline:none;font-size:.82rem;font-family:'Inter',sans-serif;color:var(--ink)}
+.name-inp::placeholder{color:var(--ink3)}
+.name-suggestions{display:flex;flex-direction:column;gap:2px}
+.name-sug{padding:8px 10px;border-radius:var(--r);font-size:.79rem;color:var(--ink2);cursor:pointer;transition:background .12s;display:flex;align-items:center;gap:8px}
+.name-sug:hover{background:var(--soft)}
+.name-sug svg{width:13px;height:13px;color:var(--ink3);flex-shrink:0}
+.name-sug-lbl{font-size:.63rem;color:var(--ink3);margin-left:auto}
+
+/* Overlay backdrop */
+.srch-backdrop{display:none;position:fixed;inset:0;z-index:50}
+.srch-backdrop.on{display:block}
+
+@media(max-width:768px){
+  .srch-card{flex-direction:column;border-radius:var(--r)}
+  .sf{border-right:none;border-bottom:1px solid var(--border);border-radius:0}
+  .sf:first-child{border-radius:var(--r) var(--r) 0 0}
+  .sf:last-of-type{border-bottom:none}
+  .srch-btn{border-radius:0 0 var(--r) var(--r);padding:12px;justify-content:center}
+  .sf-panel{min-width:calc(100vw - 28px);left:0;right:0}
+  .region-panel{min-width:calc(100vw - 28px)}
+  .region-cols{grid-template-columns:1fr 1fr}
+}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cat-card{transition:opacity .25s, transform .25s, transform .22s, box-shadow .22s !important}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-in">
+    <a href="#"><img src="logo.png" class="logo-img" alt="MyLoungers"/></a>
+    <div class="nav-cats">
+      <button class="nc on" id="nc1" onclick="filterByCategory('hotel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M16 22V12H8v10"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>Hotel</button>
+      <button class="nc" id="nc2" onclick="filterByCategory('beach')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 4C14 4 11 6 10 9L3 21"/><path d="M22 4C19 4 16 6 15 9L8 21"/><path d="M7 21h14"/><circle cx="19" cy="4" r="1" fill="currentColor"/></svg>Beach Club</button>
+      <button class="nc" id="nc3" onclick="filterByCategory('aqua')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 17c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 7c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/></svg>Aqua Park</button>
+      <button class="nc" id="nc4" onclick="openBasvuru()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Başvuru Formu</button>
+    </div>
+    <div class="nav-r">
+      <div class="lang-wrap" id="langWrap">
+        <button class="lang-btn" id="langBtn" onclick="toggleLang(event)">
+          <span class="flag" id="activFlag">🇹🇷</span>
+          <span id="activCode">TR</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="lang-drop" id="langDrop">
+          <button class="lang-opt active" onclick="setLang('TR','🇹🇷',event)"><span class="flag">🇹🇷</span><span class="lname">Türkçe</span><span class="lcheck">✓</span></button>
+          <button class="lang-opt" onclick="setLang('EN','🇬🇧',event)"><span class="flag">🇬🇧</span><span class="lname">English</span><span class="lcheck">✓</span></button>
+          <button class="lang-opt" onclick="setLang('RU','🇷🇺',event)"><span class="flag">🇷🇺</span><span class="lname">Русский</span><span class="lcheck">✓</span></button>
+          <button class="lang-opt" onclick="setLang('DE','🇩🇪',event)"><span class="flag">🇩🇪</span><span class="lname">Deutsch</span><span class="lcheck">✓</span></button>
+        </div>
+      </div>
+      <button class="btn-login" id="btnLogin" onclick="window.location.href='giris.html'">Giriş Yap</button>
+      <button class="btn-signup" id="btnSignup" onclick="window.location.href='giris.html'">Üye Ol</button>
+    </div>
+    <button class="ham" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mob-cats">
+  <div class="mob-cats-in">
+    <button class="mcat on" id="mc1" onclick="filterByCategory('hotel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M16 22V12H8v10"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>Hotel</button>
+    <button class="mcat" id="mc2" onclick="filterByCategory('beach')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 4C14 4 11 6 10 9L3 21"/><path d="M22 4C19 4 16 6 15 9L8 21"/><path d="M7 21h14"/><circle cx="19" cy="4" r="1" fill="currentColor"/></svg>Beach Club</button>
+    <button class="mcat" id="mc3" onclick="filterByCategory('aqua')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 17c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 7c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/></svg>Aqua Park</button>
+    <button class="mcat" id="mc4" onclick="openBasvuru()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Başvuru</button>
+  </div>
+</div>
+<div class="mob-menu" id="mobMenu" onclick="closePanelOutside(event)">
+  <div class="mob-panel">
+    <div class="mob-panel-head">
+      <img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_1" class="mob-panel-logo" alt="MyLoungers"/>
+      <button class="mob-close" onclick="closeMenu()">✕</button>
+    </div>
+    <div class="mob-btns"><button class="mob-btn-login" id="mobBtnLogin" onclick="window.location.href='giris.html'">Giriş Yap</button><button class="mob-btn-signup" id="mobBtnSignup" onclick="window.location.href='giris.html'">Üye Ol</button></div>
+    <div class="mob-sec-title" id="mobCatTitle">Kategoriler</div>
+    <button class="mob-link" id="ml1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M16 22V12H8v10"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg> Hotel</button>
+    <button class="mob-link" id="ml2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 4C14 4 11 6 10 9L3 21"/><path d="M22 4C19 4 16 6 15 9L8 21"/><path d="M7 21h14"/><circle cx="19" cy="4" r="1" fill="currentColor"/></svg> Beach Club</button>
+    <button class="mob-link" id="ml3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 17c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 7c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/></svg> Aqua Park</button>
+    <div class="mob-sec-title" id="mobGenTitle">Genel</div>
+    <button class="mob-link" id="ml4" onclick="openBasvuru()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Başvuru Formu</button>
+    <button class="mob-link" id="ml5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Hakkımızda</button>
+    <button class="mob-link" id="ml6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.22 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg> İletişim</button>
+  </div>
+</div>
+<div class="bwrap" id="bwrap">
+  <div class="slide on"><img class="slide-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_2" alt=""/></div>
+  <div class="slide"><img class="slide-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_3" alt=""/></div>
+  <div class="slide"><img class="slide-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_4" alt=""/></div>
+  <div class="slide"><img class="slide-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_5" alt=""/></div>
+  <div class="slide"><img class="slide-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_6" alt=""/></div>
+  <button class="sarr prev" id="sprev">&#8249;</button>
+  <button class="sarr next" id="snext">&#8250;</button>
+  <div class="sdots">
+    <button class="dot on" onclick="go(0)"></button><button class="dot" onclick="go(1)"></button>
+    <button class="dot" onclick="go(2)"></button><button class="dot" onclick="go(3)"></button>
+    <button class="dot" onclick="go(4)"></button>
+  </div>
+  <div class="bprog"><div class="bbar" id="bbar"></div></div>
+</div>
+<div id="srchBackdrop" class="srch-backdrop" onclick="closeSf()"></div>
+<div class="srch-wrap"><div class="srch-in"><div class="srch-card">
+
+  <!-- BÖLGE -->
+  <div class="sf" data-panel="panelRegion" onclick="openSf('panelRegion',event)">
+    <div class="sfl" id="sfl-region">Bölge</div>
+    <div class="sfv" id="sfv-region">Bodrum, Antalya, Marmaris...</div>
+    <div class="sf-panel region-panel" id="panelRegion" onclick="event.stopPropagation()">
+      <div class="region-cols">
+        <div class="region-iller">
+          <button id="gpsBtn" onclick="useGPS()" style="display:flex;align-items:center;gap:8px;width:calc(100% - 24px);margin:8px 12px 4px;padding:9px 14px;border-radius:50px;border:1.5px solid var(--teal);background:rgba(10,186,181,.06);color:var(--teal);font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+            📍 Konumumu Kullan
+          </button>
+          <div class="r-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="ilSearch" placeholder="İl ara..." autocomplete="off"/>
+          </div>
+          <div id="illerList"></div>
+        </div>
+        <div class="region-ilceler" id="ilcelerList"></div>
+      </div>
+      <div class="r-footer">
+        <span class="r-footer-val" id="regionVal"></span>
+        <div style="display:flex;gap:8px">
+          <button class="r-btn-clear" onclick="clearRegion()">Temizle</button>
+          <button class="r-btn-ok" onclick="applyRegion()">Uygula</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESİS TİPİ -->
+  <div class="sf" data-panel="panelType" onclick="openSf('panelType',event)">
+    <div class="sfl" id="sfl-type">Tesis Tipi</div>
+    <div class="sfv" id="sfv-type">Hotel, Beach Club...</div>
+    <div class="sf-panel type-panel" id="panelType" onclick="event.stopPropagation()">
+      <div class="sf-panel-inn">
+        <div style="font-size:.68rem;font-weight:700;color:var(--ink3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em">Tesis Türü Seçin</div>
+        <div class="type-grid-p">
+          <button class="tp-btn" onclick="toggleType(this,'hotel')"><span class="tpico">🏨</span>Hotel</button>
+          <button class="tp-btn" onclick="toggleType(this,'beach')"><span class="tpico">🏖️</span>Beach Club</button>
+          <button class="tp-btn" onclick="toggleType(this,'aqua')"><span class="tpico">💦</span>Aqua Park</button>
+          <button class="tp-btn" onclick="toggleType(this,'tatil')"><span class="tpico">🌴</span>Tatil Köyü</button>
+          <button class="tp-btn" onclick="toggleType(this,'pansiyon')"><span class="tpico">🏠</span>Pansiyon</button>
+          <button class="tp-btn" onclick="toggleType(this,'havuz')"><span class="tpico">🏊</span>Havuzlu Tesis</button>
+        </div>
+        <div class="tp-footer">
+          <button class="r-btn-clear" onclick="clearType()">Temizle</button>
+          <button class="r-btn-ok" onclick="closeSf()">Uygula</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TARİH -->
+  <div class="sf" data-panel="panelDate" onclick="openSf('panelDate',event)">
+    <div class="sfl" id="sfl-date">Tarih</div>
+    <div class="sfv" id="sfv-date">Tarih seçin</div>
+    <div class="sf-panel date-panel" id="panelDate" onclick="event.stopPropagation()">
+      <div class="sf-panel-inn">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="calPrev()">‹</button>
+          <span class="cal-month" id="calMonth"></span>
+          <button class="cal-nav" onclick="calNext()">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:10px">
+          <button class="r-btn-clear" onclick="clearDate()">Temizle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESİS ADI -->
+  <div class="sf" data-panel="panelName" onclick="openSf('panelName',event)" style="border-radius:0">
+    <div class="sfl" id="sfl-name">Tesis Adı</div>
+    <div class="sfv" id="sfv-name">Ara...</div>
+    <div class="sf-panel" id="panelName" onclick="event.stopPropagation()">
+      <div class="sf-panel-inn">
+        <div class="name-inp-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="name-inp" id="nameInput" placeholder="Tesis adı yazın..." autocomplete="off"/>
+        </div>
+        <div style="font-size:.6rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Popüler Tesisler</div>
+        <div class="name-suggestions" id="nameSuggestions"></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="srch-btn" onclick="doSearch()">🔍 <span id="srch-btn-txt">Tesis Ara</span></button>
+  <button class="filter-btn" onclick="openFilter(event)" id="filterBtn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+    <span>Filtrele</span>
+    <span class="filter-badge" id="filterBadge" style="display:none">0</span>
+  </button>
+</div></div></div>
+
+<!-- FİLTRE PANEL OVERLAY -->
+<div id="filterOverlay" class="filter-overlay" onclick="closeFilter()"></div>
+<div id="filterPanel" class="filter-panel">
+  <div class="fp-head">
+    <div class="fp-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      Filtrele
+    </div>
+    <button class="fp-close" onclick="closeFilter()">✕</button>
+  </div>
+
+  <div class="fp-body">
+
+    <!-- KONUM & MESAFE -->
+    <div class="fp-section">
+      <div class="fp-sec-title">Konuma Göre Ara</div>
+      <button class="fp-gps-btn" id="fpGpsBtn" onclick="fpUseGPS()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="2 3"/></svg>
+        <span id="fpGpsTxt">📍 Konumumu Kullan</span>
+      </button>
+      <div id="fpDistWrap" style="display:none;margin-top:14px">
+        <div class="fp-price-row">
+          <div class="fp-price-box" style="flex:none;padding:8px 16px">
+            <span class="fp-price-lbl">Mesafe</span>
+            <span class="fp-price-val" id="fpDistVal">5 km</span>
+          </div>
+          <div style="flex:1;font-size:.75rem;color:var(--ink3);padding-left:10px;line-height:1.5">Seçilen konumdan bu mesafe içindeki tesisler gösterilir</div>
+        </div>
+        <input type="range" class="fp-range" id="fpDistRange" min="1" max="100" step="1" value="5" oninput="updateDist()" style="position:relative;margin-top:8px">
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:.62rem;color:var(--ink3)">
+          <span>1 km</span><span>25 km</span><span>50 km</span><span>100 km</span>
+        </div>
+        <button class="fp-gps-clear" onclick="clearGPS()">✕ Konumu Kaldır</button>
+      </div>
+    </div>
+
+    <!-- SIRALAMA -->
+    <div class="fp-section">
+      <div class="fp-sec-title">Sıralama</div>
+      <div class="fp-sort-grid">
+        <button class="fp-sort-btn sel" onclick="setSort(this,'popular')">⭐ Popüler</button>
+        <button class="fp-sort-btn" onclick="setSort(this,'price_asc')">💰 Ucuzdan Pahalıya</button>
+        <button class="fp-sort-btn" onclick="setSort(this,'price_desc')">💎 Pahalıdan Ucuza</button>
+        <button class="fp-sort-btn" onclick="setSort(this,'rating')">🏆 En Yüksek Puan</button>
+      </div>
+    </div>
+
+    <!-- FİYAT ARALIĞI -->
+    <div class="fp-section">
+      <div class="fp-sec-title">Günlük Fiyat Aralığı</div>
+      <div class="fp-price-row">
+        <div class="fp-price-box">
+          <span class="fp-price-lbl">Min</span>
+          <span class="fp-price-val" id="priceMinVal">₺0</span>
+        </div>
+        <div class="fp-price-sep">—</div>
+        <div class="fp-price-box">
+          <span class="fp-price-lbl">Max</span>
+          <span class="fp-price-val" id="priceMaxVal">₺5000+</span>
+        </div>
+      </div>
+      <div class="fp-range-wrap">
+        <input type="range" class="fp-range" id="priceMin" min="0" max="5000" step="100" value="0" oninput="updatePriceRange()">
+        <input type="range" class="fp-range" id="priceMax" min="0" max="5000" step="100" value="5000" oninput="updatePriceRange()">
+      </div>
+    </div>
+
+    <!-- MİNİMUM PUAN -->
+    <div class="fp-section">
+      <div class="fp-sec-title">Minimum Puan</div>
+      <div class="fp-stars-row">
+        <button class="fp-star-btn sel" onclick="setStar(this,0)">Tümü</button>
+        <button class="fp-star-btn" onclick="setStar(this,3)">3★+</button>
+        <button class="fp-star-btn" onclick="setStar(this,4)">4★+</button>
+        <button class="fp-star-btn" onclick="setStar(this,4.5)">4.5★+</button>
+      </div>
+    </div>
+
+    <!-- ÖZELLİKLER -->
+    <div class="fp-section">
+      <div class="fp-sec-title">Özellikler</div>
+      <div class="fp-chips">
+        <button class="fp-chip" onclick="toggleChip(this,'havuz')">🏊 Havuz</button>
+        <button class="fp-chip" onclick="toggleChip(this,'wifi')">📶 Wi-Fi</button>
+        <button class="fp-chip" onclick="toggleChip(this,'deniz')">🌊 Denize Sıfır</button>
+        <button class="fp-chip" onclick="toggleChip(this,'restoran')">🍽️ Restoran</button>
+        <button class="fp-chip" onclick="toggleChip(this,'bar')">🍹 Bar</button>
+        <button class="fp-chip" onclick="toggleChip(this,'semsiye')">⛱️ Şemsiye</button>
+        <button class="fp-chip" onclick="toggleChip(this,'otopark')">🅿️ Otopark</button>
+        <button class="fp-chip" onclick="toggleChip(this,'transfer')">✈️ Havalimanı Transfer</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="fp-foot">
+    <button class="fp-clear-btn" onclick="clearFilter()">Temizle</button>
+    <button class="fp-apply-btn" onclick="applyFilter()">Sonuçları Gör</button>
+  </div>
+</div>
+<div class="stats"><div class="stats-in">
+  <div><div class="stn">100+</div><div class="stl" id="stl1">Aktif tesis</div></div><div class="std"></div>
+  <div><div class="stn">50K+</div><div class="stl" id="stl2">Rezervasyon</div></div><div class="std"></div>
+  <div><div class="stn">15</div><div class="stl" id="stl3">Destinasyon</div></div><div class="std"></div>
+  <div><div class="stn">4.9★</div><div class="stl" id="stl4">Ortalama puan</div></div><div class="std"></div>
+  <div><div class="stn">QR</div><div class="stl" id="stl5">Temassız giriş</div></div>
+</div></div>
+<section class="sec">
+  <div class="sec-row"><div class="sec-h" id="cat-title">Tesis Kategorileri</div><a class="sec-a" id="cat-all">Tümünü gör →</a></div>
+  <div class="cat-grid">
+    <div class="cat-card" data-cat="hotel" onclick="filterByCategory('hotel')"><img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_7" alt=""/><div class="cat-ov"><div class="cat-name" id="cat1-name">Hotel</div><div class="cat-sub" id="cat1-sub">Konfor ve hizmet</div></div><div class="cat-badge ct" id="cat1-badge">Popüler</div></div>
+    <div class="cat-card" data-cat="beach" onclick="filterByCategory('beach')"><img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_8" alt=""/><div class="cat-ov"><div class="cat-name" id="cat2-name">Beach Club</div><div class="cat-sub" id="cat2-sub">Şezlong &amp; deniz keyfi</div></div></div>
+    <div class="cat-card" data-cat="aqua" onclick="filterByCategory('aqua')"><img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_9" alt=""/><div class="cat-ov"><div class="cat-name" id="cat3-name">Aqua Park</div><div class="cat-sub" id="cat3-sub">Eğlence &amp; kaydırak</div></div><div class="cat-badge co" id="cat3-badge">Yeni</div></div>
+  </div>
+</section>
+<section class="sec" style="padding-top:0">
+  <div class="sec-row"><div class="sec-h" id="fav-title">En Çok Tercih Edilenler</div><a class="sec-a" id="fav-all" onclick="window.location.href='arama.html'" style="cursor:pointer">Tümünü gör →</a></div>
+  <div class="pgrid" id="tesisGrid">
+    <div class="pc" data-type="hotel" onclick="window.location.href='tesis-zuzu.html'" style="cursor:pointer">ointer"><div class="pw0"><img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_10" alt=""/><button class="pfav">♡</button><div class="prat">★ 4.9</div></div><div class="pn">Zuzuu Beach Hotel</div><div class="pl">📍 Yalıkavak, Bodrum</div><div class="pf"><span class="pfc">Wi-Fi</span><span class="pfc">Bar</span><span class="pfc">Havuz</span></div><div class="pp"><b>₺450</b><span> / gün</span></div></div>
+    <div class="pc" data-type="aqua" onclick="window.location.href='tesis-zuzu.html'" style="cursor:pointer">ointer"><div class="pw0"><img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_11" alt=""/><button class="pfav">♡</button><div class="prat">★ 4.7</div></div><div class="pn">Marmaris Aqua Resort</div><div class="pl">📍 İçmeler, Marmaris</div><div class="pf"><span class="pfc">Havuz</span><span class="pfc">Restoran</span></div><div class="pp"><b>₺320</b><span> / gün</span></div></div>
+    <div class="pc" data-type="beach" onclick="window.location.href='tesis-zuzu.html'" style="cursor:pointer">ointer"><div class="pw0"><img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_12" alt=""/><button class="pfav">♡</button><div class="prat">★ 4.8</div><div class="ptag ct">Yeni</div></div><div class="pn">Fethiye Paradise Beach</div><div class="pl">📍 Ölüdeniz, Fethiye</div><div class="pf"><span class="pfc">Tekne</span><span class="pfc">Bar</span></div><div class="pp"><b>₺280</b><span> / gün</span></div></div>
+    <div class="pc" data-type="hotel" onclick="window.location.href='tesis-zuzu.html'" style="cursor:pointer">ointer"><div class="pw0"><img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_13" alt=""/><button class="pfav">♡</button><div class="prat">★ 4.8</div></div><div class="pn">Bodrum Blue Bay Hotel</div><div class="pl">📍 Gümbet, Bodrum</div><div class="pf"><span class="pfc">Deniz Manzarası</span><span class="pfc">Bar</span></div><div class="pp"><b>₺395</b><span> / gün</span></div></div>
+  </div>
+</section>
+<div class="how"><div class="how-in">
+  <div class="how-ttl" id="how-title">Nasıl <span>Çalışır?</span></div>
+  <p class="how-sub" id="how-sub">3 adımda şezlong rezervasyonu — hızlı, güvenli, temassız</p>
+  <div class="hgrid">
+
+    <div class="hs">
+      <div class="hn" id="how1-step"><span class="hn-num">1</span><span id="how1-step-txt"> Adım 01</span></div>
+      <span class="hi">🔍</span>
+      <h3 id="how1-title">Tesis Seç</h3>
+      <p id="how1-desc">Bodrum'dan Antalya'ya Türkiye'nin en iyi beach club ve otellerini keşfet.</p>
+      <div class="hs-points">
+        <div class="hs-point"><div class="hs-point-dot"></div>Konuma, tarihe veya tesis tipine göre filtrele</div>
+        <div class="hs-point"><div class="hs-point-dot"></div>Gerçek kullanıcı yorumları ve puanlarını gör</div>
+        <div class="hs-point"><div class="hs-point-dot"></div>Anlık müsaitlik durumunu kontrol et</div>
+      </div>
+      <span class="hs-tag">🗺️ 15+ Destinasyon</span>
+    </div>
+
+    <div class="hs">
+      <div class="hn" id="how2-step"><span class="hn-num">2</span><span id="how2-step-txt"> Adım 02</span></div>
+      <span class="hi">🏖️</span>
+      <h3 id="how2-title">Şezlong Seç</h3>
+      <p id="how2-desc">Tesisin interaktif haritasından tam istediğin şezlongu seç — önden görüp rezerve et.</p>
+      <div class="hs-points">
+        <div class="hs-point"><div class="hs-point-dot"></div>Denize yakınlık, gölge ve VIP bölge tercihi yap</div>
+        <div class="hs-point"><div class="hs-point-dot"></div>Silver, Gold ve VIP kategoriler arasından seç</div>
+        <div class="hs-point"><div class="hs-point-dot"></div>Birden fazla şezlongu aynı anda rezerve et</div>
+      </div>
+      <span class="hs-tag">🛏 100+ Şezlong / Tesis</span>
+    </div>
+
+    <div class="hs">
+      <div class="hn" id="how3-step"><span class="hn-num">3</span><span id="how3-step-txt"> Adım 03</span></div>
+      <span class="hi">✅</span>
+      <h3 id="how3-title">Öde &amp; Uzan</h3>
+      <p id="how3-desc">Güvenli ödeme yap, telefonuna QR kodu gelsin — tesiste bekleme yok, kuyruk yok.</p>
+      <div class="hs-points">
+        <div class="hs-point"><div class="hs-point-dot"></div>iyzico ile 256-bit SSL şifreli güvenli ödeme</div>
+        <div class="hs-point"><div class="hs-point-dot"></div>QR kod ile temassız, kasasız tesis girişi</div>
+        <div class="hs-point"><div class="hs-point-dot"></div>24 saate kadar ücretsiz iptal imkânı</div>
+      </div>
+      <span class="hs-tag">🔒 Güvenli &amp; Anında Onay</span>
+    </div>
+
+  </div>
+  <div class="how-cta">
+    <button class="how-cta-btn" onclick="document.querySelector('.srch-wrap').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){document.querySelector('.srch-card').style.boxShadow='0 0 0 3px var(--teal)';setTimeout(function(){document.querySelector('.srch-card').style.boxShadow='';},1500);},600);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Tesis Aramaya Başla
+    </button>
+    <div class="how-cta-sub">Ücretsiz üyelik · Kredi kartı gerekmez</div>
+  </div>
+</div></div>
+<div class="plan-sec">
+  <div>
+    <div class="plan-k" id="plan-tag">Şezlong Planı</div>
+    <h2 id="plan-title">Tam istediğin şezlongu harita üzerinden seç</h2>
+    <p class="pdesc" id="plan-desc">Tesis planında müsait şezlongları anlık görürsün.</p>
+    <ul class="cl">
+      <li id="plan-f1">Anlık müsaitlik durumu</li>
+      <li id="plan-f2">Silver, Gold, VIP kategori fiyatları</li>
+      <li id="plan-f3">İleri tarihli rezervasyon imkânı</li>
+      <li id="plan-f4">Garson çağırma ve sipariş</li>
+    </ul>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-solid" id="plan-btn1" onclick="window.location.href='tesis-zuzu.html'">Tesis planını gör →</button>
+      <button class="btn-ghost" id="plan-btn2" onclick="window.location.href='tesis-zuzu.html'">Daha fazla bilgi</button>
+    </div>
+  </div>
+  <div class="pww">
+    <div class="pwt"><span class="pwn">Zuzuu Beach Hotel</span><span class="pwd">6 Mar 2026</span></div>
+    <div class="pwb">
+      <div class="pwc">Silver — ₺1,000 / gün</div>
+      <div class="lrow"><div class="l lno">4</div><div class="l lok">5</div><div class="l lok">6</div><div class="l lok">7</div><div class="l lok">8</div><div class="l lok">9</div><div class="l lpnd">28</div><div class="l lsel">30✓</div></div>
+      <div class="pwc">Gold — ₺600 / gün</div>
+      <div class="lrow"><div class="l lgold">1</div><div class="l lgold">2</div><div class="l lgold">3</div><div class="l lno">4</div><div class="l lgold">5</div><div class="l lgold">6</div><div class="l lgold">7</div><div class="l lgold">8</div></div>
+    </div>
+    <div class="pwleg">
+      <div class="pwl"><div class="pwld" style="background:#F0FFF4;border:1px solid #BBF7D0"></div><span id="leg1">Müsait</span></div>
+      <div class="pwl"><div class="pwld" style="background:#FFF5F5;border:1px solid #FED7D7"></div><span id="leg2">Rezerve</span></div>
+      <div class="pwl"><div class="pwld" style="background:#FFFBEB;border:1px solid #FDE68A"></div><span id="leg3">Tadilat</span></div>
+      <div class="pwl"><div class="pwld" style="background:var(--teal)"></div><span id="leg4">Seçimim</span></div>
+    </div>
+  </div>
+</div>
+<div class="b2b"><div class="b2b-in">
+  <div>
+    <span style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);display:block;margin-bottom:9px" id="b2b-tag">Tesis Sahipleri İçin</span>
+    <h2 id="b2b-title">Tesisinizi MyLoungers'a ekleyin</h2>
+    <p class="desc" id="b2b-desc">Otel, beach club veya plaj işletmenizi platforma ekleyin.</p>
+    <div class="b2b-acts">
+      <button class="btn-solid" id="b2b-btn1" onclick="openBasvuru()">Başvuru Formu →</button>
+      <button class="btn-ghost" id="b2b-btn2">Demo İzle</button>
+    </div>
+  </div>
+  <div class="b2bcards">
+    <div class="b2bc"><div class="b2bi">📈</div><div><h4 id="b2b1-title">Doluluk Oranını Artır</h4><p id="b2b1-desc">Sezon boyunca %90+ doluluk oranı hedefleyin, her şezlong gelir getirsin.</p></div></div>
+    <div class="b2bc"><div class="b2bi">💳</div><div><h4 id="b2b2-title">Online Ödeme &amp; Raporlama</h4><p id="b2b2-desc">iyzico altyapısıyla tahsilatlar otomatik, raporlar anlık — kasaya dokunmadan.</p></div></div>
+    <div class="b2bc"><div class="b2bi">🌟</div><div><h4 id="b2b3-title">Ücretsiz Tesis Sayfası</h4><p id="b2b3-desc">Fotoğraf, harita, şezlong planı — tesisiniz 10 dakikada yayında.</p></div></div>
+  </div>
+</div></div>
+<div class="rev">
+  <div class="sec-row"><div class="sec-h" id="rev-title">Kullanıcılar Ne Diyor?</div><a class="sec-a" id="rev-all">Tüm yorumlar →</a></div>
+  <div class="rgrid">
+    <div class="rc"><div class="rc-dest" id="rev1-dest">🏖️ Bodrum · Zuzuu Beach Hotel</div><div class="rc-stars">★★★★★</div><p class="rc-text">"<span id="rev1-text">Bodrum tatilinde şezlong için saatlerce beklemek zorunda kalmadık!</span>"</p><div class="rc-auth"><div class="rc-av">AY</div><div><div class="rc-name">Ayşe Y.</div><div class="rc-loc" id="rev1-loc">İstanbul · Doğrulanmış</div></div></div></div>
+    <div class="rc"><div class="rc-dest" id="rev2-dest">🏊 Marmaris · Aqua Resort</div><div class="rc-stars">★★★★★</div><p class="rc-text">"<span id="rev2-text">QR kod ile giriş süper. Kasaya uğramak yok, kuyruk yok!</span>"</p><div class="rc-auth"><div class="rc-av">MK</div><div><div class="rc-name">Mehmet K.</div><div class="rc-loc" id="rev2-loc">Ankara · Doğrulanmış</div></div></div></div>
+    <div class="rc"><div class="rc-dest" id="rev3-dest">🌊 Fethiye · Paradise Beach</div><div class="rc-stars">★★★★★</div><p class="rc-text">"<span id="rev3-text">Denize en yakın şezlongu seçebildim. Uygulama çok kolay!</span>"</p><div class="rc-auth"><div class="rc-av">ZD</div><div><div class="rc-name">Zeynep D.</div><div class="rc-loc" id="rev3-loc">İzmir · Doğrulanmış</div></div></div></div>
+  </div>
+</div>
+<footer>
+  <div class="ft">
+    <div>
+      <img src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_14" class="fl-logo" alt="MyLoungers"/>
+      <div class="fd" id="footer-desc">Türkiye'nin şezlong rezervasyon platformu.</div>
+      <div class="fa"><a href="#" class="fapp">🍎 App Store</a><a href="#" class="fapp">🤖 Google Play</a></div>
+    </div>
+    <div class="fcol"><h5 id="ft-p">Platform</h5><ul>
+      <li><a href="#" id="ft-p1">Tesisleri Keşfet</a></li>
+      <li><a href="#" id="ft-p2">Harita ile Ara</a></li>
+      <li><a href="#" id="ft-p3">Nasıl Çalışır?</a></li>
+      <li><a href="#" id="ft-p4">Rezervasyon Takibi</a></li>
+    </ul></div>
+    <div class="fcol"><h5 id="ft-c">Kurumsal</h5><ul>
+      <li><a href="#" onclick="openBasvuru()" id="ft-c1">Tesis Başvurusu</a></li>
+      <li><a href="#" id="ft-c2">Hakkımızda</a></li>
+      <li><a href="#" id="ft-c3">İletişim</a></li>
+    </ul></div>
+    <div class="fcol"><h5 id="ft-s">Destek</h5><ul>
+      <li><a href="#" id="ft-s1">KVKK Metni</a></li>
+      <li><a href="#" id="ft-s2">Gizlilik</a></li>
+      <li><a href="#" id="ft-s3">İptal &amp; İade</a></li>
+      <li><a href="#"><span class="__cf_email__" data-cfemail="bed3dfd7d2fed3c7d2d1cbd0d9dbcccd90ddd1d3">[email&#160;protected]</span></a></li>
+    </ul></div>
+  </div>
+  <div class="fb"><span id="ft-copy">© 2025 MyLoungers · BGS İnteraktif</span><span id="ft-made">🇹🇷 Türkiye'de yapıldı</span></div>
+</footer>
+<div class="basvuru-overlay" id="basvuruOverlay" onclick="overlayClick(event)">
+  <div class="basvuru-modal" id="basvuruModal">
+    <button class="bm-close-btn" onclick="closeBasvuru()">✕</button>
+    <div class="bm-left">
+      <div class="bm-tag">✦ İşletme Başvurusu</div>
+      <div class="bm-ttl">İşletmenizi<br/><span>Büyütün</span></div>
+      <p class="bm-desc">200+ işletme MyLoungers ile daha fazla kazanıyor. İlk ay ücretsiz.</p>
+      <div class="bm-feats">
+        <div class="bm-feat"><div class="bm-feat-ico">💰</div><div><div class="bm-feat-ttl">+%40 Gelir Artışı</div><div class="bm-feat-desc">Garantili rezervasyonlarla doluluk artar.</div></div></div>
+        <div class="bm-feat"><div class="bm-feat-ico">📱</div><div><div class="bm-feat-ttl">Dijital Yönetim</div><div class="bm-feat-desc">Rezervasyon, ödeme, rapor tek panelde.</div></div></div>
+        <div class="bm-feat"><div class="bm-feat-ico">⚡</div><div><div class="bm-feat-ttl">48 Saatte Hazır</div><div class="bm-feat-desc">Teknik bilgi gerektirmez.</div></div></div>
+        <div class="bm-feat"><div class="bm-feat-ico">🎁</div><div><div class="bm-feat-ttl">İlk Ay Ücretsiz</div><div class="bm-feat-desc">Sözleşme yok, taahhüt yok.</div></div></div>
+      </div>
+      <div class="bm-ref">
+        <div class="bm-ref-stars">★★★★★</div>
+        <div class="bm-ref-text">"Doluluk oranımız %60'dan %95'e çıktı. Gelirimiz %45 arttı!"</div>
+        <div class="bm-ref-auth">
+          <div class="bm-ref-av">AY</div>
+          <div><div class="bm-ref-name">Ahmet Yılmaz</div><div class="bm-ref-role">Paradise Beach · Bodrum</div></div>
+        </div>
+      </div>
+      <div class="bm-trust">
+        <div class="bm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ücretsiz Kurulum</div>
+        <div class="bm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>7/24 Destek</div>
+        <div class="bm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sözleşme YOK</div>
+      </div>
+    </div>
+    <div class="bm-right" id="bmRight">
+      <div class="bm-steps">
+        <div class="bm-step active" id="bmS1"><div class="bm-sn">1</div><div class="bm-sl">İşletme</div></div>
+        <div class="bm-step" id="bmS2"><div class="bm-sn">2</div><div class="bm-sl">Tesis</div></div>
+        <div class="bm-step" id="bmS3"><div class="bm-sn">3</div><div class="bm-sl">İletişim</div></div>
+      </div>
+      <div class="bm-prog"><div class="bm-pb" id="bmPb"></div></div>
+      <!-- P1 -->
+      <div class="bm-pane on" id="bmP1">
+        <div class="bm-pttl">İşletme Bilgileri</div>
+        <div class="bm-psub">Tesisiniz hakkında temel bilgileri girin.</div>
+        <div class="bfg"><label class="bfl">İşletme Adı *</label>
+          <div class="biw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M16 22V12H8v10"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
+          <input class="bfi" type="text" placeholder="Örn: Zuzuu Beach Club" id="bm-name"/></div></div>
+        <div class="bfg"><label class="bfl">Tesis Türü *</label>
+          <div class="tgrid">
+            <button type="button" class="tbtn sel" onclick="bmType(this)"><span class="ti">🏨</span>Hotel</button>
+            <button type="button" class="tbtn" onclick="bmType(this)"><span class="ti">🏖️</span>Beach Club</button>
+            <button type="button" class="tbtn" onclick="bmType(this)"><span class="ti">💦</span>Aqua Park</button>
+            <button type="button" class="tbtn" onclick="bmType(this)"><span class="ti">🏠</span>Pansiyon</button>
+            <button type="button" class="tbtn" onclick="bmType(this)"><span class="ti">🌴</span>Tatil Köyü</button>
+            <button type="button" class="tbtn" onclick="bmType(this)"><span class="ti">🏊</span>Havuzlu Tesis</button>
+          </div></div>
+        <div class="bfg2">
+          <div><label class="bfl">Şehir *</label>
+            <select class="bfs" id="bm-city">
+              <option value="">Seçiniz</option>
+              <option>Bodrum</option><option>Antalya</option><option>Marmaris</option>
+              <option>Fethiye</option><option>Alanya</option><option>Çeşme</option>
+              <option>Kuşadası</option><option>Didim</option><option>Kemer</option>
+              <option>Side</option><option>Belek</option><option>İstanbul</option><option>Diğer</option>
+            </select></div>
+          <div><label class="bfl">İlçe / Bölge</label><input class="bfi" type="text" placeholder="Örn: Yalıkavak" id="bm-district"/></div>
+        </div>
+        <div class="bfg"><label class="bfl">Tam Adres</label><textarea class="bft" placeholder="Tesisin tam adresi..." id="bm-address" rows="2"></textarea></div>
+        <div class="bm-nav"><div></div>
+          <button type="button" class="bm-next" onclick="bmPane(2)">Devam Et <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+      <!-- P2 -->
+      <div class="bm-pane" id="bmP2">
+        <div class="bm-pttl">Tesis Detayları</div>
+        <div class="bm-psub">Kapasite ve özellikler hakkında bilgi verin.</div>
+        <div class="bfg"><label class="bfl">Şezlong Kapasitesi: <span id="bmCV">50</span> adet</label>
+          <div class="cap-w">
+            <input type="range" class="cap-s" min="5" max="500" value="50" step="5" id="bm-cap"/>
+            <div class="cap-v" id="bmCVB">50</div>
+          </div></div>
+        <div class="bfg"><label class="bfl">Sezon</label>
+          <select class="bfs" id="bm-season">
+            <option>Yaz sezonu (Mayıs–Ekim)</option>
+            <option>Tüm yıl açık</option>
+            <option>Yaz + Kış (ara sezon dahil)</option>
+          </select></div>
+        <div class="bfg"><label class="bfl">Mevcut Özellikler</label>
+          <div class="chk-grid">
+            <label class="chk"><input type="checkbox" checked/> 🍹 Bar / İçecek</label>
+            <label class="chk"><input type="checkbox"/> 🍽️ Restoran</label>
+            <label class="chk"><input type="checkbox" checked/> 🌊 Deniz erişimi</label>
+            <label class="chk"><input type="checkbox"/> 🏊 Yüzme havuzu</label>
+            <label class="chk"><input type="checkbox"/> 📶 Wi-Fi</label>
+            <label class="chk"><input type="checkbox"/> 🅿️ Otopark</label>
+            <label class="chk"><input type="checkbox"/> 🚌 Otobüs ulaşımı</label>
+            <label class="chk"><input type="checkbox"/> 🚕 Taksi / Transfer</label>
+            <label class="chk"><input type="checkbox"/> 🛥️ Tekne / Su sporları</label>
+            <label class="chk"><input type="checkbox"/> 🎵 Canlı müzik / DJ</label>
+            <label class="chk"><input type="checkbox"/> ♿ Engelli erişimi</label>
+            <label class="chk"><input type="checkbox"/> 🛍️ Market / Kiosk</label>
+          </div></div>
+        <div class="bfg"><label class="bfl">Ek Notlar</label><textarea class="bft" placeholder="Eklemek istedikleriniz..." id="bm-notes"></textarea></div>
+        <div class="bm-nav">
+          <button type="button" class="bm-prev" onclick="bmPane(1)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Geri</button>
+          <button type="button" class="bm-next" onclick="bmPane(3)">Devam Et <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+      <!-- P3 -->
+      <div class="bm-pane" id="bmP3">
+        <div class="bm-pttl">İletişim Bilgileri</div>
+        <div class="bm-psub">Sizi en kısa sürede arayalım.</div>
+        <div class="bfg2">
+          <div><label class="bfl">Ad *</label><input class="bfi" type="text" placeholder="Adınız" id="bm-fn"/></div>
+          <div><label class="bfl">Soyad *</label><input class="bfi" type="text" placeholder="Soyadınız" id="bm-ln"/></div>
+        </div>
+        <div class="bfg"><label class="bfl">Telefon *</label>
+          <div class="biw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.22 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+          <input class="bfi" type="tel" placeholder="+90 5XX XXX XX XX" id="bm-phone"/></div></div>
+        <div class="bfg"><label class="bfl">E-posta</label>
+          <div class="biw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input class="bfi" type="email" placeholder="ornek@isletme.com" id="bm-email"/></div></div>
+        <div class="bfg"><label class="bfl">Tercih Ettiğiniz İletişim</label>
+          <div class="copts">
+            <div class="copt sel" onclick="bmContact(this)">📞 Telefon</div>
+            <div class="copt" onclick="bmContact(this)">💬 WhatsApp</div>
+            <div class="copt" onclick="bmContact(this)">📧 E-posta</div>
+          </div></div>
+        <div class="bfg"><label class="bfl">En Uygun Arama Saati</label>
+          <select class="bfs" id="bm-time">
+            <option>Sabah (09:00–12:00)</option>
+            <option>Öğleden sonra (12:00–17:00)</option>
+            <option>Akşam (17:00–20:00)</option>
+            <option>Fark etmez</option>
+          </select></div>
+        <div class="bfg">
+          <label class="chk" style="border:none;padding:0;font-size:.72rem;font-weight:500;color:var(--ink3)">
+            <input type="checkbox" id="bm-agree"/>
+            <span>MyLoungers <a href="#" style="color:var(--teal)">Gizlilik Politikası</a>'nı okudum ve kabul ediyorum. *</span>
+          </label></div>
+        <div class="bm-nav" style="flex-direction:column;gap:7px;align-items:stretch">
+          <button type="button" class="bm-sub" onclick="bmSubmit()">🚀 Başvurumu Tamamla</button>
+          <button type="button" class="bm-prev" style="justify-content:center" onclick="bmPane(2)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Geri</button>
+        </div>
+      </div>
+      <!-- SUCCESS -->
+      <div class="bm-pane" id="bmPOk">
+        <div class="bm-ok">
+          <div class="bm-ok-ico">🎉</div>
+          <h3>Başvurunuz Alındı!</h3>
+          <p>En geç <strong>24 saat</strong> içinde ekibimiz sizi arayacak. İlk ay tamamen ücretsiz!</p>
+          <button class="bm-ok-btn" onclick="closeBasvuru()">Ana Sayfaya Dön</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
+// ══ AKTİF ARAMA SİSTEMİ ══
+var srchState = {il:'', ilce:'', type:[], date:'', name:''};
+
+var ILLER = {
+  "Adana": ["Seyhan","Çukurova","Yüreğir","Sarıçam","Ceyhan","Kozan","İmamoğlu","Karaisalı","Karataş","Pozantı","Saimbeyli","Tufanbeyli","Yumurtalık"],
+  "Adıyaman": ["Merkez","Besni","Çelikhan","Gerger","Gölbaşı","Kahta","Samsat","Sincik","Tut"],
+  "Afyonkarahisar": ["Merkez","Bayat","Başmakçı","Bolvadin","Çay","Çobanlar","Dazkırı","Dinar","Emirdağ","Sandıklı","Sinanpaşa","Sultandağı","Şuhut"],
+  "Ağrı": ["Merkez","Diyadin","Doğubayazıt","Eleşkirt","Hamur","Patnos","Taşlıçay","Tutak"],
+  "Aksaray": ["Merkez","Ağaçören","Eskil","Gülağaç","Güzelyurt","Ortaköy","Sarıyahşi"],
+  "Amasya": ["Merkez","Göynücek","Gümüşhacıköy","Hamamözü","Merzifon","Suluova","Taşova"],
+  "Ankara": ["Çankaya","Keçiören","Mamak","Etimesgut","Yenimahalle","Altındağ","Sincan","Pursaklar","Gölbaşı","Polatlı","Beypazarı","Haymana","Kızılcahamam","Nallıhan","Kazan"],
+  "Antalya": ["Muratpaşa","Konyaaltı","Kepez","Alanya","Manavgat","Kemer","Belek","Side","Kaş","Kalkan","Finike","Serik","Gazipaşa","Akseki","Elmalı","Gündoğmuş","İbradı","Korkuteli","Kumluca"],
+  "Ardahan": ["Merkez","Çıldır","Damal","Göle","Hanak","Posof"],
+  "Artvin": ["Merkez","Ardanuç","Arhavi","Borçka","Hopa","Murgul","Şavşat","Yusufeli"],
+  "Aydın": ["Efeler","Didim","Kuşadası","Nazilli","Söke","Çine","Germencik","İncirliova","Karacasu","Karpuzlu","Koçarlı","Köşk","Sultanhisar","Yenipazar"],
+  "Balıkesir": ["Altıeylül","Karesi","Ayvalık","Erdek","Gönen","Bandırma","Edremit","Burhaniye","Bigadiç","Dursunbey","Havran","İvrindi","Kepsut","Manyas","Marmara","Savaştepe","Sındırgı","Susurluk"],
+  "Bartın": ["Merkez","Amasra","Kurucaşile","Ulus"],
+  "Batman": ["Merkez","Beşiri","Gercüş","Hasankeyf","Kozluk","Sason"],
+  "Bayburt": ["Merkez","Aydıntepe","Demirözü"],
+  "Bilecik": ["Merkez","Bozüyük","Gölpazarı","İnhisar","Osmaneli","Pazaryeri","Söğüt","Yenipazar"],
+  "Bingöl": ["Merkez","Adaklı","Genç","Karlıova","Kiğı","Solhan","Yayladere","Yedisu"],
+  "Bitlis": ["Merkez","Adilcevaz","Ahlat","Güroymak","Hizan","Mutki","Tatvan"],
+  "Bolu": ["Merkez","Dörtdivan","Gerede","Göynük","Kıbrıscık","Mengen","Mudurnu","Seben","Yeniçağa"],
+  "Burdur": ["Merkez","Ağlasun","Altınyayla","Bucak","Çavdır","Çeltikçi","Gölhisar","Karamanlı","Kemer","Tefenni","Yeşilova"],
+  "Bursa": ["Osmangazi","Nilüfer","Yıldırım","Gemlik","Mudanya","İnegöl","Orhangazi","Büyükorhan","Gürsu","Harmancık","İznik","Karacabey","Keles","Kestel","Mustafakemalpaşa","Orhaneli","Yenişehir"],
+  "Çanakkale": ["Merkez","Gelibolu","Gökçeada","Bozcaada","Ezine","Lapseki","Ayvacık","Bayramiç","Biga","Çan","Eceabat","Yenice"],
+  "Çankırı": ["Merkez","Atkaracalar","Bayramören","Çerkeş","Eldivan","Ilgaz","Korgun","Kurşunlu","Orta","Şabanözü","Yapraklı"],
+  "Çorum": ["Merkez","Alaca","Bayat","Boğazkale","Dodurga","İskilip","Kargı","Laçin","Mecitözü","Osmancık","Sungurlu","Uğurludağ"],
+  "Denizli": ["Pamukkale","Merkezefendi","Çardak","Tavas","Sarayköy","Acıpayam","Babadağ","Baklan","Bekilli","Beyağaç","Bozkurt","Buldan","Çal","Çameli","Güney","Honaz","Kale","Serinhisar"],
+  "Diyarbakır": ["Bağlar","Kayapınar","Sur","Yenişehir","Bismil","Çermik","Çınar","Çüngüş","Dicle","Eğil","Ergani","Hani","Hazro","Kocaköy","Kulp","Lice","Silvan"],
+  "Düzce": ["Merkez","Akçakoca","Cumayeri","Çilimli","Gölyaka","Gümüşova","Kaynaşlı","Yığılca"],
+  "Edirne": ["Merkez","Enez","Havsa","İpsala","Keşan","Lalapaşa","Meriç","Süloğlu","Uzunköprü"],
+  "Elazığ": ["Merkez","Ağın","Alacakaya","Arıcak","Baskil","Karakoçan","Keban","Kovancılar","Maden","Palu","Sivrice"],
+  "Erzincan": ["Merkez","Çayırlı","İliç","Kemah","Kemaliye","Otlukbeli","Refahiye","Tercan","Üzümlü"],
+  "Erzurum": ["Yakutiye","Palandöken","Aziziye","Aşkale","Çat","Hınıs","Horasan","İspir","Karayazı","Narman","Oltu","Olur","Pasinler","Şenkaya","Tekman","Tortum","Uzundere"],
+  "Eskişehir": ["Tepebaşı","Odunpazarı","Alpu","Beylikova","Çifteler","Günyüzü","Han","İnönü","Mahmudiye","Mihalgazi","Mihalıççık","Sarıcakaya","Seyitgazi","Sivrihisar"],
+  "Gaziantep": ["Şahinbey","Şehitkamil","Nizip","İslahiye","Araban","Karkamış","Nurdağı","Oğuzeli","Yavuzeli"],
+  "Giresun": ["Merkez","Tirebolu","Alucra","Bulancak","Çamoluk","Çanakçı","Dereli","Doğankent","Espiye","Eynesil","Görele","Güce","Keşap","Piraziz","Şebinkarahisar","Yağlıdere"],
+  "Gümüşhane": ["Merkez","Kelkit","Köse","Kürtün","Şiran","Torul"],
+  "Hakkari": ["Merkez","Çukurca","Derecik","Şemdinli","Yüksekova"],
+  "Hatay": ["Antakya","İskenderun","Samandağ","Arsuz","Dörtyol","Altınözü","Belen","Erzin","Hassa","Kırıkhan","Kumlu","Payas","Reyhanlı","Yayladağı"],
+  "Iğdır": ["Merkez","Aralık","Karakoyunlu","Tuzluca"],
+  "Isparta": ["Merkez","Atabey","Eğirdir","Gelendost","Gönen","Keçiborlu","Senirkent","Sütçüler","Şarkikaraağaç","Uluborlu","Yalvaç","Yenişarbademli"],
+  "İstanbul": ["Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar","Bahçelievler","Bakırköy","Başakşehir","Bayrampaşa","Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece","Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan","Fatih","Gaziosmanpaşa","Güngören","Kadıköy","Kağıthane","Kartal","Küçükçekmece","Maltepe","Pendik","Sancaktepe","Sarıyer","Silivri","Sultanbeyli","Sultangazi","Şile","Şişli","Tuzla","Ümraniye","Üsküdar","Zeytinburnu"],
+  "İzmir": ["Konak","Karşıyaka","Bornova","Çeşme","Foça","Urla","Seferihisar","Alaçatı","Dikili","Karaburun","Selçuk","Aliağa","Balçova","Bayındır","Bayraklı","Bergama","Beydağ","Buca","Çiğli","Gaziemir","Güzelbahçe","Karabağlar","Kemalpaşa","Kınık","Kiraz","Menemen","Narlıdere","Ödemiş","Tire","Torbalı"],
+  "Kahramanmaraş": ["Onikişubat","Dulkadiroğlu","Afşin","Andırın","Çağlayancerit","Ekinözü","Elbistan","Göksun","Nurhak","Pazarcık","Türkoğlu"],
+  "Karabük": ["Merkez","Eflani","Eskipazar","Ovacık","Safranbolu","Yenice"],
+  "Karaman": ["Merkez","Ayrancı","Başyayla","Ermenek","Kazımkarabekir","Sarıveliler"],
+  "Kars": ["Merkez","Akyaka","Arpaçay","Digor","Kağızman","Sarıkamış","Selim","Susuz"],
+  "Kastamonu": ["Merkez","Cide","İnebolu","Abana","Ağlı","Araç","Azdavay","Bozkurt","Çatalzeytin","Daday","Devrekani","Doğanyurt","Hanönü","İhsangazi","Küre","Pınarbaşı","Seydiler","Taşköprü","Tosya"],
+  "Kayseri": ["Kocasinan","Melikgazi","Talas","Akkışla","Bünyan","Develi","Felahiye","Hacılar","İncesu","Özvatan","Pınarbaşı","Sarıoğlan","Sarız","Tomarza","Yahyalı","Yeşilhisar"],
+  "Kırıkkale": ["Merkez","Bahşili","Balışeyh","Çelebi","Delice","Karakeçili","Keskin","Sulakyurt","Yahşihan"],
+  "Kırklareli": ["Merkez","Babaeski","Demirköy","Kofçaz","Lüleburgaz","Pehlivanköy","Pınarhisar","Vize"],
+  "Kırşehir": ["Merkez","Akçakent","Akpınar","Boztepe","Çiçekdağı","Kaman","Mucur"],
+  "Kilis": ["Merkez","Elbeyli","Musabeyli","Polateli"],
+  "Kocaeli": ["İzmit","Gebze","Kartepe","Körfez","Başiskele","Çayırova","Darıca","Derince","Dilovası","Gölcük","Kandıra","Karamürsel","Ömerli"],
+  "Konya": ["Selçuklu","Karatay","Meram","Beyşehir","Seydişehir","Akşehir","Ereğli","Ilgın","Kadınhanı","Kulu","Sarayönü","Cihanbeyli","Çumra","Doğanhisar","Güneysınır","Hüyük","Bozkır","Derebucak","Emirgazi","Taşkent","Tuzlukçu","Yunak"],
+  "Kütahya": ["Merkez","Altıntaş","Aslanapa","Çavdarhisar","Domaniç","Dumlupınar","Emet","Gediz","Hisarcık","Pazarlar","Şaphane","Simav","Tavşanlı"],
+  "Malatya": ["Battalgazi","Yeşilyurt","Akçadağ","Arapgir","Arguvan","Darende","Doğanyol","Doğanşehir","Hekimhan","Kale","Kuluncak","Pütürge","Yazıhan"],
+  "Manisa": ["Şehzadeler","Yunusemre","Akhisar","Alaşehir","Demirci","Gölmarmara","Gördes","Kırkağaç","Köprübaşı","Kula","Salihli","Sarıgöl","Saruhanlı","Selendi","Soma","Turgutlu"],
+  "Mardin": ["Artuklu","Dargeçit","Derik","Kızıltepe","Mazıdağı","Midyat","Nusaybin","Ömerli","Savur","Yeşilli"],
+  "Mersin": ["Yenişehir","Mezitli","Tarsus","Silifke","Erdemli","Anamur","Bozyazı","Taşucu","Akdeniz","Toroslar","Çamlıyayla","Gülnar","Mut"],
+  "Muğla": ["Bodrum","Yalıkavak","Turgutreis","Gümbet","Gündoğan","Ortakent","Bitez","Güvercinlik","Marmaris","İçmeler","Armutalan","Fethiye","Ölüdeniz","Hisarönü","Çalış","Ovacık","Datça","Köyceğiz","Ortaca","Dalaman","Milas","Menteşe","Seydikemer","Ula","Kavaklıdere"],
+  "Muş": ["Merkez","Bulanık","Hasköy","Korkut","Malazgirt","Varto"],
+  "Nevşehir": ["Merkez","Acıgöl","Avanos","Derinkuyu","Gülşehir","Hacıbektaş","Kozaklı","Ürgüp"],
+  "Niğde": ["Merkez","Altunhisar","Bor","Çamardı","Çiftlik","Ulukışla"],
+  "Ordu": ["Altınordu","Akkuş","Aybastı","Çamaş","Çatalpınar","Çaybaşı","Fatsa","Gölköy","Gülyalı","Gürgentepe","İkizce","Kabadüz","Kabataş","Korgan","Kumru","Mesudiye","Perşembe","Ulubey","Ünye"],
+  "Osmaniye": ["Merkez","Bahçe","Düziçi","Hasanbeyli","Kadirli","Sumbas","Toprakkale"],
+  "Rize": ["Merkez","Çayeli","Ardeşen","Pazar","Güneysu","Hemşin","İkizdere","İyidere","Kalkandere","Çamlıhemşin","Derepazarı","Fındıklı"],
+  "Sakarya": ["Adapazarı","Serdivan","Karasu","Hendek","Akyazı","Arifiye","Erenler","Ferizli","Geyve","Karapürçek","Kaynarca","Kocaali","Pamukova","Sapanca","Söğütlü","Taraklı"],
+  "Samsun": ["İlkadım","Atakum","Canik","Terme","Bafra","Alaçam","Asarcık","Ayvacık","Havza","Kavak","Ladik","Ondokuzmayıs","Salıpazarı","Tekkeköy","Vezirköprü","Yakakent"],
+  "Siirt": ["Merkez","Baykan","Eruh","Kurtalan","Pervari","Şirvan","Tillo"],
+  "Sinop": ["Merkez","Ayancık","Gerze","Boyabat","Dikmen","Durağan","Erfelek","Saraydüzü","Türkeli"],
+  "Sivas": ["Merkez","Akıncılar","Altınyayla","Divriği","Doğanşar","Gemerek","Gölova","Hafik","İmranlı","Kangal","Koyulhisar","Suşehri","Şarkışla","Ulaş","Yıldızeli","Zara"],
+  "Şanlıurfa": ["Eyyübiye","Haliliye","Karaköprü","Birecik","Bozova","Ceylanpınar","Halfeti","Harran","Hilvan","Siverek","Suruç","Viranşehir"],
+  "Şırnak": ["Merkez","Beytüşşebap","Cizre","Güçlükonak","İdil","Silopi","Uludere"],
+  "Tekirdağ": ["Merkez","Çorlu","Çerkezköy","Marmara Ereğlisi","Ergene","Hayrabolu","Kapaklı","Malkara","Muratlı","Saray","Şarköy"],
+  "Tokat": ["Merkez","Almus","Artova","Başçiftlik","Erbaa","Niksar","Pazar","Reşadiye","Sulusaray","Turhal","Yeşilyurt","Zile"],
+  "Trabzon": ["Ortahisar","Akçaabat","Of","Sürmene","Araklı","Arsin","Beşikdüzü","Çarşıbaşı","Çaykara","Dernekpazarı","Düzköy","Hayrat","Köprübaşı","Maçka","Şalpazarı","Tonya","Vakfıkebir","Yomra"],
+  "Tunceli": ["Merkez","Çemişgezek","Hozat","Mazgirt","Nazimiye","Ovacık","Pertek","Pülümür"],
+  "Uşak": ["Merkez","Banaz","Eşme","Karahallı","Sivaslı","Ulubey"],
+  "Van": ["İpekyolu","Edremit","Tuşba","Bahçesaray","Başkale","Çaldıran","Çatak","Erciş","Gevaş","Gürpınar","Muradiye","Özalp","Saray"],
+  "Yalova": ["Merkez","Çınarcık","Armutlu","Altınova","Çiftlikkoy","Termal"],
+  "Yozgat": ["Merkez","Akdağmadeni","Aydıncık","Boğazlıyan","Çandır","Çayıralan","Çekerek","Kadışehri","Saraykent","Sarıkaya","Şefaatli","Sorgun","Yenifakılı","Yerköy"],
+  "Zonguldak": ["Merkez","Ereğli","Devrek","Çaycuma","Alaplı","Gökçebey","Kilimli","Kozlu"]
+};
+
+var TESISLER = [
+  {name:'Zuzuu Beach Hotel', il:'Bodrum (Muğla)', ilce:'Yalıkavak', type:'hotel'},
+  {name:'Marmaris Aqua Resort', il:'Marmaris (Muğla)', ilce:'İçmeler', type:'aqua'},
+  {name:'Fethiye Paradise Beach', il:'Fethiye (Muğla)', ilce:'Ölüdeniz', type:'beach'},
+  {name:'Bodrum Blue Bay Hotel', il:'Bodrum (Muğla)', ilce:'Gümbet', type:'hotel'},
+  {name:'Çeşme Marina Club', il:'İzmir', ilce:'Çeşme', type:'beach'},
+  {name:'Alanya Sunset Beach', il:'Antalya', ilce:'Alanya', type:'beach'},
+  {name:'Kuşadası Grand Hotel', il:'Kuşadası (Aydın)', ilce:'Davutlar', type:'hotel'},
+  {name:'Datça Blue Resort', il:'Muğla', ilce:'Datça', type:'beach'},
+];
+
+// Panel aç/kapat
+function openSf(id, e) {
+  if(e) e.stopPropagation();
+  document.querySelectorAll('.sf-panel').forEach(function(p){p.classList.remove('open');});
+  document.querySelectorAll('.sf').forEach(function(s){s.classList.remove('active');});
+  var panel = document.getElementById(id);
+  var sf = panel.previousElementSibling || panel.parentElement.querySelector('.sf');
+  // sf parent'ı bul
+  var sfEl = document.querySelector('[data-panel="'+id+'"]');
+  if(sfEl) sfEl.classList.add('active');
+  panel.classList.add('open');
+  document.getElementById('srchBackdrop').classList.add('on');
+  if(id === 'panelDate') buildCal();
+  if(id === 'panelRegion') { renderIller(''); renderIlceler(activeIl); }
+}
+function closeSf() {
+  document.querySelectorAll('.sf-panel').forEach(function(p){p.classList.remove('open');});
+  document.querySelectorAll('.sf').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('srchBackdrop').classList.remove('on');
+}
+document.addEventListener('click', function(e){
+  var card = document.querySelector('.srch-card');
+  var backdrop = document.getElementById('srchBackdrop');
+  if(card && !card.contains(e.target)) closeSf();
+});
+
+// ── BÖLGE ──
+var activeIl = '';
+function renderIller(filter) {
+  var cont = document.getElementById('illerList');
+  cont.innerHTML = '';
+  Object.keys(ILLER).filter(function(il){return !filter||il.toLowerCase().includes(filter.toLowerCase());}).forEach(function(il){
+    var d = document.createElement('div');
+    d.className = 'r-item' + (il===activeIl?' active':'');
+    d.innerHTML = il + '<span class="r-arr">›</span>';
+    d.onclick = function(e){ e.stopPropagation(); selectIl(il); };
+    cont.appendChild(d);
+  });
+}
+function selectIl(il) {
+  activeIl = il;
+  srchState.ilce = '';
+  renderIller(document.getElementById('ilSearch').value);
+  renderIlceler(il);
+}
+function renderIlceler(il) {
+  var cont = document.getElementById('ilcelerList');
+  cont.innerHTML = '';
+  if(!il || !ILLER[il]){cont.innerHTML='<div style="padding:12px 14px;font-size:.75rem;color:var(--ink3)">İl seçin</div>';return;}
+  var ttl = document.createElement('div'); ttl.className='r-ilce-ttl'; ttl.textContent=il; cont.appendChild(ttl);
+  var tumu = document.createElement('div'); tumu.className='r-ilce-item'+(srchState.ilce===''&&activeIl===il?' sel':''); tumu.textContent='Tümü'; tumu.onclick=function(ev){ev.stopPropagation();srchState.ilce='';renderIlceler(il);};cont.appendChild(tumu);
+  ILLER[il].forEach(function(ilce){
+    var d = document.createElement('div');
+    d.className = 'r-ilce-item'+(srchState.ilce===ilce?' sel':'');
+    d.textContent = ilce;
+    d.onclick = function(ev){ ev.stopPropagation(); srchState.ilce=ilce; renderIlceler(il); };
+    cont.appendChild(d);
+  });
+}
+function applyRegion() {
+  if(activeIl) {
+    srchState.il = activeIl;
+    var txt = activeIl + (srchState.ilce ? ' / '+srchState.ilce : '');
+    var el = document.getElementById('sfv-region');
+    el.textContent = txt; el.classList.add('selected');
+  }
+  closeSf();
+}
+function clearRegion() {
+  srchState.il=''; srchState.ilce=''; activeIl='';
+  var el=document.getElementById('sfv-region'); el.textContent='Bodrum, Antalya, Marmaris...'; el.classList.remove('selected');
+  renderIller(''); renderIlceler('');
+  document.getElementById('regionVal').textContent='';
+}
+document.getElementById('ilSearch').addEventListener('input', function(){renderIller(this.value);});
+
+// ── TESİS TİPİ ──
+function toggleType(btn, type) {
+  btn.classList.toggle('sel');
+  var idx = srchState.type.indexOf(type);
+  if(idx>-1) srchState.type.splice(idx,1); else srchState.type.push(type);
+  updateTypeLabel();
+}
+function updateTypeLabel() {
+  var map = {hotel:'Hotel', beach:'Beach Club', aqua:'Aqua Park', tatil:'Tatil Köyü', pansiyon:'Pansiyon', havuz:'Havuzlu Tesis'};
+  var el = document.getElementById('sfv-type');
+  if(srchState.type.length===0){el.textContent='Hotel, Beach Club...';el.classList.remove('selected');}
+  else{el.textContent=srchState.type.map(function(t){return map[t]||t;}).join(', ');el.classList.add('selected');}
+}
+function clearType() {
+  srchState.type=[];
+  document.querySelectorAll('.tp-btn').forEach(function(b){b.classList.remove('sel');});
+  updateTypeLabel();
+}
+
+// ── TARİH ──
+var calDate = new Date();
+function buildCal() {
+  var y=calDate.getFullYear(), m=calDate.getMonth();
+  var months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  document.getElementById('calMonth').textContent = months[m]+' '+y;
+  var grid = document.getElementById('calGrid');
+  grid.innerHTML='';
+  var days=['Pt','Sa','Ça','Pe','Cu','Ct','Pz'];
+  days.forEach(function(d){var e=document.createElement('div');e.className='cal-day-lbl';e.textContent=d;grid.appendChild(e);});
+  var first=new Date(y,m,1).getDay(); first=(first+6)%7;
+  for(var i=0;i<first;i++){var e=document.createElement('button');e.className='cal-day empty';e.textContent='';grid.appendChild(e);}
+  var today=new Date(); var dim=new Date(y,m+1,0).getDate();
+  var selDate = srchState.date ? new Date(srchState.date) : null;
+  for(var d=1;d<=dim;d++){
+    var e=document.createElement('button');e.className='cal-day';e.textContent=d;
+    var thisDate=new Date(y,m,d);
+    if(thisDate<new Date(today.getFullYear(),today.getMonth(),today.getDate())){e.className+=' disabled';e.disabled=true;}
+    else if(thisDate.toDateString()===today.toDateString()) e.className+=' today';
+    if(selDate&&thisDate.toDateString()===selDate.toDateString()) e.className+=' sel';
+    e.onclick=(function(dd,mm,yy){return function(ev){
+      if(ev) ev.stopPropagation();
+      srchState.date=yy+'-'+(mm+1<10?'0':'')+(mm+1)+'-'+(dd<10?'0':'')+dd;
+      var months2=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+      var el=document.getElementById('sfv-date');
+      el.textContent=dd+' '+months2[mm]+' '+yy; el.classList.add('selected');
+      buildCal(); setTimeout(closeSf,200);
+    };})(d,m,y);
+    grid.appendChild(e);
+  }
+}
+function calPrev(){calDate.setMonth(calDate.getMonth()-1);buildCal();}
+function calNext(){calDate.setMonth(calDate.getMonth()+1);buildCal();}
+function clearDate(){srchState.date='';var el=document.getElementById('sfv-date');el.textContent='Tarih seçin';el.classList.remove('selected');buildCal();}
+
+// ── TESİS ADI ──
+function updateNameSuggestions(q) {
+  var cont = document.getElementById('nameSuggestions');
+  cont.innerHTML='';
+  if(!q){
+    // Popüler tesisler
+    TESISLER.slice(0,4).forEach(function(t){addSug(cont,t,false);});
+  } else {
+    var res = TESISLER.filter(function(t){return t.name.toLowerCase().includes(q.toLowerCase());});
+    if(res.length===0){cont.innerHTML='<div style="padding:8px 10px;font-size:.75rem;color:var(--ink3)">Sonuç bulunamadı</div>';}
+    else res.forEach(function(t){addSug(cont,t,true);});
+  }
+}
+function addSug(cont,t,highlight){
+  var d=document.createElement('div'); d.className='name-sug';
+  var ico = t.type==='hotel'?'🏨':t.type==='beach'?'🏖️':'💦';
+  var lbl = t.type==='hotel'?'Hotel':t.type==='beach'?'Beach Club':'Aqua Park';
+  d.innerHTML='<span>'+ico+'</span><span>'+t.name+'</span><span class="name-sug-lbl">'+t.il+'</span>';
+  d.onclick=function(){
+    srchState.name=t.name;
+    var el=document.getElementById('sfv-name'); el.textContent=t.name; el.classList.add('selected');
+    document.getElementById('nameInput').value=t.name;
+    closeSf();
+  };
+  cont.appendChild(d);
+}
+document.getElementById('nameInput').addEventListener('input',function(){updateNameSuggestions(this.value);});
+
+// ── ARAMA ──
+function doSearch() {
+  var results = TESISLER.filter(function(t){
+    if(srchState.il && !t.il.includes(srchState.il.split(' ')[0])) return false;
+    if(srchState.type.length>0 && !srchState.type.includes(t.type)) return false;
+    if(srchState.name && !t.name.toLowerCase().includes(srchState.name.toLowerCase())) return false;
+    return true;
+  });
+  var msg = results.length>0 ? results.length+' tesis bulundu: '+results.map(function(r){return r.name;}).join(', ') : 'Sonuç bulunamadı. Filtrelerinizi değiştirin.';
+  alert('🔍 Arama Sonuçları\n\n'+msg+'\n\n(Listeleme sayfası yakında açılacak)');
+}
+
+// İlk yüklemede
+renderIller('');
+renderIlceler('');
+updateNameSuggestions('');
+
+</script><script type="text/javascript">
+
+// ── GPS ──
+function useGPS(){
+  if(!navigator.geolocation){alert('Tarayıcınız GPS desteklemiyor.');return;}
+  var btn=document.getElementById('gpsBtn');
+  if(btn){btn.textContent='📡 Konum alınıyor...';}
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat=pos.coords.latitude, lng=pos.coords.longitude;
+    var locs=[
+      {il:'Antalya',lat:36.9,lng:30.7,r:0.5},
+      {il:'Muğla',lat:37.2,lng:28.4,r:0.8},
+      {il:'İzmir',lat:38.4,lng:27.1,r:0.5},
+      {il:'İstanbul',lat:41.0,lng:29.0,r:0.5},
+      {il:'Bodrum',lat:37.03,lng:27.43,r:0.2},
+      {il:'Marmaris',lat:36.86,lng:28.27,r:0.2},
+      {il:'Fethiye',lat:36.62,lng:29.12,r:0.2},
+    ];
+    var found=null, minD=999;
+    locs.forEach(function(l){
+      var d=Math.sqrt(Math.pow(lat-l.lat,2)+Math.pow(lng-l.lng,2));
+      if(d<minD){minD=d;found=l;}
+    });
+    if(found&&minD<found.r*3){
+      srchState.il=found.il;
+      var rv=document.getElementById('regionVal');
+      if(rv)rv.textContent=found.il;
+      var sfv=document.getElementById('sfv-region');
+      if(sfv)sfv.textContent=found.il;
+    }
+    if(btn){btn.textContent='📍 Konumum';}
+    var panel=document.getElementById('panelRegion');
+    if(panel)panel.classList.remove('open');
+  },function(){
+    if(btn){btn.textContent='📍 Konumum';}
+    alert('Konum alınamadı. Lütfen tarayıcı iznini kontrol edin.');
+  });
+}
+
+
+// ── MENU ──
+function toggleMenu(){var h=document.getElementById('ham'),m=document.getElementById('mobMenu');h.classList.toggle('open');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+function closeMenu(){document.getElementById('ham').classList.remove('open');document.getElementById('mobMenu').classList.remove('open');document.body.style.overflow='';}
+function closePanelOutside(e){if(e.target===document.getElementById('mobMenu'))closeMenu();}
+
+// ── SLIDER ──
+(function(){
+  var N=5,cur=0,timer=null,raf=null,t0=null,DUR=5500;
+  var slides=document.querySelectorAll('.slide');
+  var dots=document.querySelectorAll('.dot');
+  var bar=document.getElementById('bbar');
+  function show(n){slides[cur].classList.remove('on');dots[cur].classList.remove('on');cur=(n+N)%N;slides[cur].classList.add('on');dots[cur].classList.add('on');}
+  function startBar(){if(raf)cancelAnimationFrame(raf);bar.style.width='0%';t0=null;(function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/DUR*100,100);bar.style.width=p+'%';if(p<100)raf=requestAnimationFrame(step);})(performance.now());}
+  window.go=function(n){if(timer)clearInterval(timer);show(n);startBar();timer=setInterval(function(){window.go(cur+1);},DUR);};
+  document.getElementById('sprev').onclick=function(){window.go(cur-1);};
+  document.getElementById('snext').onclick=function(){window.go(cur+1);};
+  var sx=0,bw=document.getElementById('bwrap');
+  bw.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
+  bw.addEventListener('touchend',function(e){var d=sx-e.changedTouches[0].clientX;if(Math.abs(d)>50)window.go(d>0?cur+1:cur-1);},{passive:true});
+  window.go(0);
+})();
+
+// ── NAV AKTİF ──
+document.querySelectorAll('.nc').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.nc').forEach(function(x){x.classList.remove('on');});b.classList.add('on');});});
+document.querySelectorAll('.mcat').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.mcat').forEach(function(x){x.classList.remove('on');});b.classList.add('on');});});
+
+// ── DİL SEÇİCİ ──
+function toggleLang(e){e.stopPropagation();document.getElementById('langWrap').classList.toggle('open');}
+function setLang(code,flag,e){
+  if(e)e.stopPropagation();
+  document.getElementById('activFlag').textContent=flag;
+  document.getElementById('activCode').textContent=code;
+  document.querySelectorAll('.lang-opt').forEach(function(o){o.classList.remove('active');});
+  if(e&&e.currentTarget)e.currentTarget.classList.add('active');
+  document.getElementById('langWrap').classList.remove('open');
+  applyLang(code);
+}
+document.addEventListener('click',function(e){var w=document.getElementById('langWrap');if(w&&!w.contains(e.target))w.classList.remove('open');});
+
+// ── ÇEVİRİLER ──
+var T={
+  TR:{nav_hotel:'Hotel',nav_beach:'Beach Club',nav_aqua:'Aqua Park',nav_form:'Başvuru Formu',btn_login:'Giriş Yap',btn_signup:'Üye Ol',mob_apply:'Başvuru',
+    srch_region:'Bölge',srch_rph:'Bodrum, Antalya, Marmaris...',srch_type:'Tesis Tipi',srch_tph:'Hotel, Beach Club...',srch_date:'Tarih',srch_dph:'Tarih seçin',srch_name:'Tesis Adı',srch_nph:'Ara...',srch_btn:'Tesis Ara',
+    stat1:'Aktif tesis',stat2:'Rezervasyon',stat3:'Destinasyon',stat4:'Ortalama puan',stat5:'Temassız giriş',
+    cat_ttl:'Tesis Kategorileri',cat_all:'Tümünü gör →',c1n:'Hotel',c1s:'Konfor ve hizmet',c1b:'Popüler',c2n:'Beach Club',c2s:'Şezlong & deniz keyfi',c3n:'Aqua Park',c3s:'Eğlence & kaydırak',c3b:'Yeni',
+    fav_ttl:'En Çok Tercih Edilenler',fav_all:'Tümünü gör →',
+    how_ttl:'Nasıl Çalışır?',how_sub:'3 adımda şezlong rezervasyonu',h1s:'Adım 01',h1t:'Tesis Seç',h1d:'Konum, tesis tipi veya tarihe göre filtrele.',h2s:'Adım 02',h2t:'Şezlong Seç',h2d:'Tesis planı üzerinden istediğin şezlongu seç.',h3s:'Adım 03',h3t:'Öde & Uzan',h3d:'Güvenli ödeme yap, QR kodunu göster.',
+    plan_tag:'Şezlong Planı',plan_ttl:'Tam istediğin şezlongu harita üzerinden seç',plan_desc:'Tesis planında müsait şezlongları anlık görürsün.',pf1:'Anlık müsaitlik durumu',pf2:'Silver, Gold, VIP kategori fiyatları',pf3:'İleri tarihli rezervasyon imkânı',pf4:'Garson çağırma ve sipariş',pb1:'Tesis planını gör →',pb2:'Daha fazla bilgi',
+    leg1:'Müsait',leg2:'Rezerve',leg3:'Tadilat',leg4:'Seçimim',
+    b2b_tag:'Tesis Sahipleri İçin',b2b_ttl:"Tesisinizi MyLoungers'a ekleyin",b2b_desc:'Otel, beach club veya plaj işletmenizi platforma ekleyin.',bb1:'Başvuru Formu →',bb2:'Demo İzle',b1t:'Doluluk Oranını Artır',b1d:'Sezon boyunca %90+ doluluk oranı hedefleyin, her şezlong gelir getirsin.',b2t:'Online Ödeme & Raporlama',b2d:'iyzico altyapısıyla tahsilatlar otomatik, raporlar anlık — kasaya dokunmadan.',b3t:'Ücretsiz Tesis Sayfası',b3d:'Fotoğraf, harita, şezlong planı — tesisiniz 10 dakikada yayında.',
+    rev_ttl:'Kullanıcılar Ne Diyor?',rev_all:'Tüm yorumlar →',r1d:'🏖️ Bodrum · Zuzuu Beach Hotel',r1t:'Bodrum tatilinde şezlong için saatlerce beklemek zorunda kalmadık!',r1l:'İstanbul · Doğrulanmış',r2d:'🏊 Marmaris · Aqua Resort',r2t:'QR kod ile giriş süper. Kasaya uğramak yok, kuyruk yok!',r2l:'Ankara · Doğrulanmış',r3d:'🌊 Fethiye · Paradise Beach',r3t:'Denize en yakın şezlongu seçebildim. Uygulama çok kolay!',r3l:'İzmir · Doğrulanmış',
+    ft_desc:"Türkiye'nin şezlong rezervasyon platformu.",ft_p:'Platform',ft_c:'Kurumsal',ft_s:'Destek',fp1:'Tesisleri Keşfet',fp2:'Harita ile Ara',fp3:'Nasıl Çalışır?',fp4:'Rezervasyon Takibi',fc1:'Tesis Başvurusu',fc2:'Hakkımızda',fc3:'İletişim',fs1:'KVKK Metni',fs2:'Gizlilik',fs3:'İptal & İade',copy:"© 2025 MyLoungers · BGS İnteraktif",made:"🇹🇷 Türkiye'de yapıldı"},
+  EN:{nav_hotel:'Hotel',nav_beach:'Beach Club',nav_aqua:'Aqua Park',nav_form:'Application Form',btn_login:'Sign In',btn_signup:'Sign Up',mob_apply:'Apply',
+    srch_region:'Region',srch_rph:'Bodrum, Antalya, Marmaris...',srch_type:'Facility Type',srch_tph:'Hotel, Beach Club...',srch_date:'Date',srch_dph:'Select date',srch_name:'Facility Name',srch_nph:'Search...',srch_btn:'Search',
+    stat1:'Active facilities',stat2:'Reservations',stat3:'Destinations',stat4:'Average rating',stat5:'Contactless entry',
+    cat_ttl:'Facility Categories',cat_all:'View all →',c1n:'Hotel',c1s:'Comfort & service',c1b:'Popular',c2n:'Beach Club',c2s:'Sunbeds & sea fun',c3n:'Aqua Park',c3s:'Fun & slides',c3b:'New',
+    fav_ttl:'Most Preferred',fav_all:'View all →',
+    how_ttl:'How It Works?',how_sub:'Reserve your sunbed in 3 steps',h1s:'Step 01',h1t:'Choose Facility',h1d:'Filter by location, type or date.',h2s:'Step 02',h2t:'Choose Sunbed',h2d:'Select your sunbed on the facility map.',h3s:'Step 03',h3t:'Pay & Relax',h3d:'Pay securely, show your QR code.',
+    plan_tag:'Sunbed Plan',plan_ttl:'Choose exactly the sunbed you want on the map',plan_desc:'See available sunbeds on the facility plan in real time.',pf1:'Real-time availability',pf2:'Silver, Gold, VIP category prices',pf3:'Advance reservation',pf4:'Waiter call & ordering',pb1:'View facility plan →',pb2:'Learn more',
+    leg1:'Available',leg2:'Reserved',leg3:'Maintenance',leg4:'My selection',
+    b2b_tag:'For Facility Owners',b2b_ttl:'Add your facility to MyLoungers',b2b_desc:'Add your hotel, beach club or beach facility to the platform.',bb1:'Application Form →',bb2:'Watch Demo',b1t:'Increase Occupancy',b1d:'Target 90%+ occupancy all season long — every sunbed earns revenue.',b2t:'Online Payment & Reporting',b2d:'Automatic collection via iyzico, real-time reports — no cash handling.',b3t:'Free Facility Page',b3d:'Photos, map, sunbed plan — your facility live in 10 minutes.',
+    rev_ttl:'What Users Say?',rev_all:'All reviews →',r1d:'🏖️ Bodrum · Zuzuu Beach Hotel',r1t:"We didn't have to wait hours for a sunbed during our Bodrum holiday!",r1l:'London · Verified',r2d:'🏊 Marmaris · Aqua Resort',r2t:'QR code entry is amazing. No cashier, no queue!',r2l:'Berlin · Verified',r3d:'🌊 Fethiye · Paradise Beach',r3t:'I could choose the sunbed closest to the sea. The app is so easy!',r3l:'Paris · Verified',
+    ft_desc:"Turkey's sunbed reservation platform.",ft_p:'Platform',ft_c:'Corporate',ft_s:'Support',fp1:'Explore Facilities',fp2:'Search on Map',fp3:'How It Works?',fp4:'Reservation Tracking',fc1:'Facility Application',fc2:'About Us',fc3:'Contact',fs1:'Privacy Policy',fs2:'Privacy',fs3:'Cancellation & Refund',copy:'© 2025 MyLoungers · BGS Interactive',made:'🇹🇷 Made in Turkey'},
+  RU:{nav_hotel:'Отель',nav_beach:'Бич-клуб',nav_aqua:'Аквапарк',nav_form:'Форма заявки',btn_login:'Войти',btn_signup:'Регистрация',mob_apply:'Заявка',
+    srch_region:'Регион',srch_rph:'Бодрум, Анталья, Мармарис...',srch_type:'Тип объекта',srch_tph:'Отель, Бич-клуб...',srch_date:'Дата',srch_dph:'Выберите дату',srch_name:'Название объекта',srch_nph:'Поиск...',srch_btn:'Поиск',
+    stat1:'Активных объектов',stat2:'Бронирований',stat3:'Направлений',stat4:'Средняя оценка',stat5:'Бесконтактный вход',
+    cat_ttl:'Категории объектов',cat_all:'Смотреть все →',c1n:'Отель',c1s:'Комфорт и сервис',c1b:'Популярно',c2n:'Бич-клуб',c2s:'Шезлонги у моря',c3n:'Аквапарк',c3s:'Развлечения и горки',c3b:'Новое',
+    fav_ttl:'Самые популярные',fav_all:'Смотреть все →',
+    how_ttl:'Как это работает?',how_sub:'Бронирование шезлонга в 3 шага',h1s:'Шаг 01',h1t:'Выберите объект',h1d:'Фильтрация по местоположению, типу или дате.',h2s:'Шаг 02',h2t:'Выберите шезлонг',h2d:'Выберите шезлонг на карте объекта.',h3s:'Шаг 03',h3t:'Оплата и отдых',h3d:'Оплатите безопасно, покажите QR-код.',
+    plan_tag:'План шезлонгов',plan_ttl:'Выберите именно тот шезлонг, который хотите',plan_desc:'Видите доступные шезлонги в режиме реального времени.',pf1:'Актуальная доступность',pf2:'Цены Silver, Gold, VIP',pf3:'Предварительное бронирование',pf4:'Вызов официанта и заказ',pb1:'Смотреть план →',pb2:'Подробнее',
+    leg1:'Свободно',leg2:'Занято',leg3:'Ремонт',leg4:'Мой выбор',
+    b2b_tag:'Для владельцев объектов',b2b_ttl:'Добавьте ваш объект на MyLoungers',b2b_desc:'Добавьте отель, пляжный клуб или пляж на платформу.',bb1:'Форма заявки →',bb2:'Смотреть демо',b1t:'Увеличьте загрузку',b1d:'Никаких пустых шезлонгов с гарантированным бронированием.',b2t:'Онлайн-оплата и отчёты',b2d:'Все платежи собираются безопасно.',b3t:'Бесплатная страница объекта',b3d:'Ваша профессиональная страница готова.',
+    rev_ttl:'Что говорят пользователи?',rev_all:'Все отзывы →',r1d:'🏖️ Бодрум · Zuzuu Beach Hotel',r1t:'Нам не пришлось часами ждать шезлонга во время отдыха в Бодруме!',r1l:'Москва · Подтверждено',r2d:'🏊 Мармарис · Aqua Resort',r2t:'Вход по QR-коду — отлично. Никакой кассы, никакой очереди!',r2l:'Санкт-Петербург · Подтверждено',r3d:'🌊 Фетхие · Paradise Beach',r3t:'Я выбрал шезлонг ближайший к морю. Приложение очень простое!',r3l:'Казань · Подтверждено',
+    ft_desc:'Платформа бронирования шезлонгов в Турции.',ft_p:'Платформа',ft_c:'Корпоративный',ft_s:'Поддержка',fp1:'Исследуйте объекты',fp2:'Поиск на карте',fp3:'Как это работает?',fp4:'Отслеживание бронирования',fc1:'Заявка объекта',fc2:'О нас',fc3:'Контакты',fs1:'Политика конфиденциальности',fs2:'Приватность',fs3:'Отмена и возврат',copy:'© 2025 MyLoungers · BGS Interactive',made:'🇹🇷 Сделано в Турции'},
+  DE:{nav_hotel:'Hotel',nav_beach:'Beach Club',nav_aqua:'Aquapark',nav_form:'Anmeldeformular',btn_login:'Anmelden',btn_signup:'Registrieren',mob_apply:'Antrag',
+    srch_region:'Region',srch_rph:'Bodrum, Antalya, Marmaris...',srch_type:'Einrichtungstyp',srch_tph:'Hotel, Beach Club...',srch_date:'Datum',srch_dph:'Datum wählen',srch_name:'Einrichtungsname',srch_nph:'Suchen...',srch_btn:'Suchen',
+    stat1:'Aktive Einrichtungen',stat2:'Buchungen',stat3:'Reiseziele',stat4:'Durchschnittsbewertung',stat5:'Kontaktloser Eintritt',
+    cat_ttl:'Einrichtungskategorien',cat_all:'Alle anzeigen →',c1n:'Hotel',c1s:'Komfort & Service',c1b:'Beliebt',c2n:'Beach Club',c2s:'Liegen & Meeresspaß',c3n:'Aquapark',c3s:'Spaß & Rutschen',c3b:'Neu',
+    fav_ttl:'Am meisten bevorzugt',fav_all:'Alle anzeigen →',
+    how_ttl:'Wie funktioniert es?',how_sub:'Sonnenliege in 3 Schritten buchen',h1s:'Schritt 01',h1t:'Einrichtung wählen',h1d:'Nach Ort, Typ oder Datum filtern.',h2s:'Schritt 02',h2t:'Liege wählen',h2d:'Liege auf dem Einrichtungsplan auswählen.',h3s:'Schritt 03',h3t:'Zahlen & Entspannen',h3d:'Sicher zahlen, QR-Code zeigen.',
+    plan_tag:'Liegenplan',plan_ttl:'Wählen Sie genau die Liege, die Sie möchten',plan_desc:'Sehen Sie verfügbare Liegen in Echtzeit auf dem Plan.',pf1:'Echtzeit-Verfügbarkeit',pf2:'Silver, Gold, VIP-Kategoriepreise',pf3:'Vorausbuchung',pf4:'Kellnerruf & Bestellung',pb1:'Liegenplan anzeigen →',pb2:'Mehr erfahren',
+    leg1:'Verfügbar',leg2:'Reserviert',leg3:'Wartung',leg4:'Meine Auswahl',
+    b2b_tag:'Für Einrichtungsbesitzer',b2b_ttl:'Fügen Sie Ihre Einrichtung zu MyLoungers hinzu',b2b_desc:'Fügen Sie Ihr Hotel, Beach Club oder Strandeinrichtung hinzu.',bb1:'Anmeldeformular →',bb2:'Demo ansehen',b1t:'Auslastung erhöhen',b1d:'Keine leeren Liegen mit garantierten Buchungen.',b2t:'Online-Zahlung & Berichte',b2d:'Alle Zahlungen werden sicher gesammelt.',b3t:'Kostenlose Einrichtungsseite',b3d:'Ihre professionelle Seite ist bereit.',
+    rev_ttl:'Was sagen Nutzer?',rev_all:'Alle Bewertungen →',r1d:'🏖️ Bodrum · Zuzuu Beach Hotel',r1t:'Wir mussten während unseres Bodrum-Urlaubs nicht stundenlang auf eine Liege warten!',r1l:'München · Verifiziert',r2d:'🏊 Marmaris · Aqua Resort',r2t:'QR-Code-Eingang ist super. Keine Kasse, keine Warteschlange!',r2l:'Hamburg · Verifiziert',r3d:'🌊 Fethiye · Paradise Beach',r3t:'Ich konnte die meeresnächste Liege auswählen. Die App ist so einfach!',r3l:'Berlin · Verifiziert',
+    ft_desc:'Türkeis Sonnenliegen-Buchungsplattform.',ft_p:'Plattform',ft_c:'Unternehmens',ft_s:'Support',fp1:'Einrichtungen erkunden',fp2:'Auf Karte suchen',fp3:'Wie funktioniert es?',fp4:'Buchungsverfolgung',fc1:'Einrichtungsantrag',fc2:'Über uns',fc3:'Kontakt',fs1:'Datenschutzrichtlinie',fs2:'Datenschutz',fs3:'Stornierung & Erstattung',copy:'© 2025 MyLoungers · BGS Interactive',made:'🇹🇷 In der Türkei hergestellt'}
+};
+
+function s(id,v){var e=document.getElementById(id);if(e&&v!==undefined)e.textContent=v;}
+
+function applyLang(code){
+  var t=T[code]; if(!t)return;
+  // Nav
+  var ncs=document.querySelectorAll('.nav-cats .nc');
+  function ncTxt(b,txt){if(b)b.lastChild.textContent=' '+txt;}
+  ncTxt(ncs[0],t.nav_hotel);ncTxt(ncs[1],t.nav_beach);ncTxt(ncs[2],t.nav_aqua);ncTxt(ncs[3],t.nav_form);
+  s('btnLogin',t.btn_login);s('btnSignup',t.btn_signup);
+  // Search
+  s('sfl-region',t.srch_region);s('sfv-region',t.srch_rph);s('sfl-type',t.srch_type);s('sfv-type',t.srch_tph);
+  s('sfl-date',t.srch_date);s('sfv-date',t.srch_dph);s('sfl-name',t.srch_name);s('sfv-name',t.srch_nph);s('srch-btn-txt',t.srch_btn);
+  // Stats
+  s('stl1',t.stat1);s('stl2',t.stat2);s('stl3',t.stat3);s('stl4',t.stat4);s('stl5',t.stat5);
+  // Cats
+  s('cat-title',t.cat_ttl);s('cat-all',t.cat_all);s('cat1-name',t.c1n);s('cat1-sub',t.c1s);s('cat1-badge',t.c1b);
+  s('cat2-name',t.c2n);s('cat2-sub',t.c2s);s('cat3-name',t.c3n);s('cat3-sub',t.c3s);s('cat3-badge',t.c3b);
+  s('fav-title',t.fav_ttl);s('fav-all',t.fav_all);
+  // How
+  s('how-title',t.how_ttl);s('how-sub',t.how_sub);s('how1-step-txt',t.h1s);s('how1-title',t.h1t);s('how1-desc',t.h1d);
+  s('how2-step-txt',t.h2s);s('how2-title',t.h2t);s('how2-desc',t.h2d);s('how3-step-txt',t.h3s);s('how3-title',t.h3t);s('how3-desc',t.h3d);
+  // Plan
+  s('plan-tag',t.plan_tag);s('plan-title',t.plan_ttl);s('plan-desc',t.plan_desc);
+  s('plan-f1',t.pf1);s('plan-f2',t.pf2);s('plan-f3',t.pf3);s('plan-f4',t.pf4);s('plan-btn1',t.pb1);s('plan-btn2',t.pb2);
+  s('leg1',t.leg1);s('leg2',t.leg2);s('leg3',t.leg3);s('leg4',t.leg4);
+  // B2B
+  s('b2b-tag',t.b2b_tag);s('b2b-title',t.b2b_ttl);s('b2b-desc',t.b2b_desc);s('b2b-btn1',t.bb1);s('b2b-btn2',t.bb2);
+  s('b2b1-title',t.b1t);s('b2b1-desc',t.b1d);s('b2b2-title',t.b2t);s('b2b2-desc',t.b2d);s('b2b3-title',t.b3t);s('b2b3-desc',t.b3d);
+  // Reviews
+  s('rev-title',t.rev_ttl);s('rev-all',t.rev_all);
+  s('rev1-dest',t.r1d);s('rev1-text',t.r1t);s('rev1-loc',t.r1l);
+  s('rev2-dest',t.r2d);s('rev2-text',t.r2t);s('rev2-loc',t.r2l);
+  s('rev3-dest',t.r3d);s('rev3-text',t.r3t);s('rev3-loc',t.r3l);
+  // Mob
+  var mls=document.querySelectorAll('.mob-link');
+  function mlTxt(b,txt){if(b)b.lastChild.textContent=' '+txt;}
+  mlTxt(mls[0],t.nav_hotel);mlTxt(mls[1],t.nav_beach);mlTxt(mls[2],t.nav_aqua);mlTxt(mls[3],t.nav_form);
+  var mcs=document.querySelectorAll('.mcat');
+  if(mcs[0])mcs[0].lastChild.textContent=t.nav_hotel;
+  if(mcs[1])mcs[1].lastChild.textContent=t.nav_beach;
+  if(mcs[2])mcs[2].lastChild.textContent=t.nav_aqua;
+  if(mcs[3])mcs[3].lastChild.textContent=t.mob_apply;
+  // Footer
+  s('mobBtnLogin',t.btn_login);s('mobBtnSignup',t.btn_signup);
+  s('footer-desc',t.ft_desc);s('ft-p',t.ft_p);s('ft-c',t.ft_c);s('ft-s',t.ft_s);
+  s('ft-p1',t.fp1);s('ft-p2',t.fp2);s('ft-p3',t.fp3);s('ft-p4',t.fp4);
+  s('ft-c1',t.fc1);s('ft-c2',t.fc2);s('ft-c3',t.fc3);
+  s('ft-s1',t.fs1);s('ft-s2',t.fs2);s('ft-s3',t.fs3);
+  s('ft-copy',t.copy);s('ft-made',t.made);
+}
+
+// ── MODAL ──
+var bmCur=1;
+function openBasvuru(){
+  bmCur=1;
+  ['bmP1','bmP2','bmP3','bmPOk'].forEach(function(id){document.getElementById(id).classList.remove('on');});
+  document.getElementById('bmP1').classList.add('on');
+  for(var i=1;i<=3;i++){var st=document.getElementById('bmS'+i);st.classList.remove('active','done');st.querySelector('.bm-sn').textContent=i;}
+  document.getElementById('bmS1').classList.add('active');
+  document.getElementById('bmPb').style.width='33%';
+  document.getElementById('basvuruOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBasvuru(){document.getElementById('basvuruOverlay').classList.remove('open');document.body.style.overflow='';}
+function overlayClick(e){if(e.target===document.getElementById('basvuruOverlay'))closeBasvuru();}
+function bmPane(n){
+  if(n===2){if(!document.getElementById('bm-name').value.trim()){alert('Lütfen işletme adını girin.');return;}if(!document.getElementById('bm-city').value){alert('Lütfen şehir seçin.');return;}}
+  document.getElementById('bmP'+bmCur).classList.remove('on');
+  bmCur=n;
+  document.getElementById('bmP'+n).classList.add('on');
+  for(var i=1;i<=3;i++){var st=document.getElementById('bmS'+i);st.classList.remove('active','done');if(i<n){st.classList.add('done');st.querySelector('.bm-sn').textContent='✓';}else if(i===n){st.classList.add('active');st.querySelector('.bm-sn').textContent=i;}else st.querySelector('.bm-sn').textContent=i;}
+  var pw={1:'33%',2:'66%',3:'99%'};document.getElementById('bmPb').style.width=pw[n]||'33%';
+  document.getElementById('bmRight').scrollTop=0;
+}
+function bmSubmit(){
+  if(!document.getElementById('bm-agree').checked){alert('Lütfen gizlilik politikasını kabul edin.');return;}
+  if(!document.getElementById('bm-phone').value.trim()){alert('Lütfen telefon numaranızı girin.');return;}
+  document.getElementById('bmP3').classList.remove('on');document.getElementById('bmPOk').classList.add('on');
+  document.getElementById('bmPb').style.width='100%';
+  for(var i=1;i<=3;i++){var st=document.getElementById('bmS'+i);st.classList.remove('active');st.classList.add('done');st.querySelector('.bm-sn').textContent='✓';}
+}
+function bmType(btn){btn.closest('.tgrid').querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('sel');});btn.classList.add('sel');}
+function bmContact(el){el.closest('.copts').querySelectorAll('.copt').forEach(function(c){c.classList.remove('sel');});el.classList.add('sel');}
+var bmcap=document.getElementById('bm-cap');
+if(bmcap)bmcap.addEventListener('input',function(){
+  var cv=document.getElementById('bmCV');var cvb=document.getElementById('bmCVB');
+  if(cv)cv.textContent=this.value;if(cvb)cvb.textContent=this.value;
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBasvuru();});
+
+// ── ARAMA SİSTEMİ ──
+var TESISLER=[
+  {name:'Zuzuu Beach Hotel',il:'Muğla',ilce:'Yalıkavak',type:'hotel'},
+  {name:'Marmaris Aqua Resort',il:'Muğla',ilce:'Marmaris',type:'aqua'},
+  {name:'Fethiye Paradise Beach',il:'Muğla',ilce:'Fethiye',type:'beach'},
+  {name:'Bodrum Blue Bay Hotel',il:'Muğla',ilce:'Gümbet',type:'hotel'},
+  {name:'Çeşme Marina Club',il:'İzmir',ilce:'Çeşme',type:'beach'},
+  {name:'Alanya Sunset Beach',il:'Antalya',ilce:'Alanya',type:'beach'},
+];
+
+function openSf(id,e){
+  if(e)e.stopPropagation();
+  document.querySelectorAll('.sf-panel').forEach(function(p){p.classList.remove('open');});
+  document.querySelectorAll('.sf').forEach(function(sf){sf.classList.remove('active');});
+  var panel=document.getElementById(id);if(!panel)return;
+  var sf=document.querySelector('[data-panel="'+id+'"]');
+  if(sf)sf.classList.add('active');
+  panel.classList.add('open');
+  var bd=document.getElementById('srchBackdrop');if(bd)bd.classList.add('on');
+  if(id==='panelDate')buildCal();
+  if(id==='panelName')updateNameSuggestions(document.getElementById('nameInput').value||'');
+}
+function closeSf(){
+  document.querySelectorAll('.sf-panel').forEach(function(p){p.classList.remove('open');});
+  document.querySelectorAll('.sf').forEach(function(sf){sf.classList.remove('active');});
+  var bd=document.getElementById('srchBackdrop');if(bd)bd.classList.remove('on');
+}
+document.addEventListener('click',function(e){if(!e.target.closest('.srch-card'))closeSf();});
+
+
+
+// ── BAŞLANGIÇ ──
+document.addEventListener('DOMContentLoaded', function(){
+  applyLang('TR');
+  renderIller('');
+  renderIlceler('');
+  updateNameSuggestions('');
+  // Slider
+  var idx=0;
+  var slides=document.querySelectorAll('.slide');
+  function goSlide(n){
+    slides.forEach(function(s){s.classList.remove('on');});
+    idx=(n+slides.length)%slides.length;
+    if(slides[idx])slides[idx].classList.add('on');
+    var dots=document.querySelectorAll('.bdot');
+    dots.forEach(function(d,i){d.classList.toggle('on',i===idx);});
+  }
+  if(slides.length>0){
+    window.goSlide=goSlide;
+    setInterval(function(){goSlide(idx+1);},5000);
+  }
+});
+
+
+// ── KATEGORİ FİLTRESİ ──
+var activeCategory = 'all';
+function filterByCategory(cat) {
+  activeCategory = cat;
+  
+  // Nav butonları güncelle (desktop + mobil)
+  var ncBtns = {
+    'hotel': document.getElementById('nc1'),
+    'beach': document.getElementById('nc2'),
+    'aqua':  document.getElementById('nc3')
+  };
+  var mcBtns = {
+    'hotel': document.getElementById('mc1'),
+    'beach': document.getElementById('mc2'),
+    'aqua':  document.getElementById('mc3')
+  };
+  Object.values(ncBtns).forEach(function(b){ if(b) b.classList.remove('on'); });
+  Object.values(mcBtns).forEach(function(b){ if(b) b.classList.remove('on'); });
+  if(cat !== 'all') {
+    if(ncBtns[cat]) ncBtns[cat].classList.add('on');
+    if(mcBtns[cat]) mcBtns[cat].classList.add('on');
+  } else {
+    if(ncBtns['hotel']) ncBtns['hotel'].classList.add('on');
+    if(mcBtns['hotel']) mcBtns['hotel'].classList.add('on');
+  }
+  
+  // Kategori kartları güncelle
+  document.querySelectorAll('.cat-card').forEach(function(card){
+    if(cat === 'all' || card.dataset.cat === cat) {
+      card.style.opacity = '1';
+      card.style.transform = '';
+    } else {
+      card.style.opacity = '0.35';
+      card.style.transform = 'scale(0.97)';
+    }
+  });
+  
+  // Tesis kartlarını filtrele
+  var cards = document.querySelectorAll('#tesisGrid .pc');
+  var visible = 0;
+  cards.forEach(function(card){
+    if(cat === 'all' || card.dataset.type === cat) {
+      card.style.display = '';
+      card.style.animation = 'fadeIn .3s ease';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  
+  // Başlık güncelle
+  var titles = {
+    'all':   'En Çok Tercih Edilenler',
+    'hotel': '🏨 Oteller',
+    'beach': '🏖️ Beach Clublar',
+    'aqua':  '💦 Aqua Parklar'
+  };
+  var titleEl = document.getElementById('fav-title');
+  if(titleEl) titleEl.textContent = titles[cat] || 'Tesisler';
+  
+  // Tümünü gör linki
+  var allLink = document.getElementById('fav-all');
+  if(allLink) allLink.textContent = cat === 'all' ? 'Tümünü gör →' : 'Tüm kategoriler →';
+  
+  // Sonuç yok mesajı
+  var grid = document.getElementById('tesisGrid');
+  var noResult = document.getElementById('noResultMsg');
+  if(visible === 0) {
+    if(!noResult) {
+      var msg = document.createElement('div');
+      msg.id = 'noResultMsg';
+      msg.style.cssText = 'grid-column:1/-1;text-align:center;padding:48px;color:var(--ink3);font-size:.9rem';
+      msg.innerHTML = '😔 Bu kategoride henüz tesis bulunmuyor.';
+      grid.appendChild(msg);
+    }
+  } else {
+    if(noResult) noResult.remove();
+  }
+  
+  // Smooth scroll - her zaman tesis bölümüne git
+  var sec = grid ? grid.closest('section') : null;
+  if(sec) setTimeout(function(){ sec.scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
+}
+
+// Sayfa yüklenince Hotel aktif başlasın
+document.addEventListener('DOMContentLoaded', function(){
+  filterByCategory('all');
+});
+
+// ── FİLTRE PANELİ ──
+var filterState = {sort:'popular', priceMin:0, priceMax:5000, star:0, chips:[]};
+function openFilter(e){
+  if(e) e.stopPropagation();
+  document.getElementById('filterOverlay').classList.add('open');
+  document.getElementById('filterPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeFilter(){
+  document.getElementById('filterOverlay').classList.remove('open');
+  document.getElementById('filterPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+function setSort(btn,val){
+  document.querySelectorAll('.fp-sort-btn').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel'); filterState.sort=val; updateFilterBadge();
+}
+function setStar(btn,val){
+  document.querySelectorAll('.fp-star-btn').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel'); filterState.star=val; updateFilterBadge();
+}
+function toggleChip(btn,val){
+  btn.classList.toggle('sel');
+  var idx=filterState.chips.indexOf(val);
+  if(idx>-1) filterState.chips.splice(idx,1); else filterState.chips.push(val);
+  updateFilterBadge();
+}
+function updatePriceRange(){
+  var mn=parseInt(document.getElementById('priceMin').value);
+  var mx=parseInt(document.getElementById('priceMax').value);
+  if(mn>mx){var t=mn;mn=mx;mx=t;}
+  filterState.priceMin=mn; filterState.priceMax=mx;
+  document.getElementById('priceMinVal').textContent=mn===0?'₺0':'₺'+mn;
+  document.getElementById('priceMaxVal').textContent=mx>=5000?'₺5000+':'₺'+mx;
+  updateFilterBadge();
+}
+function updateFilterBadge(){
+  var count=0;
+  if(filterState.sort!=='popular') count++;
+  if(filterState.priceMin>0||filterState.priceMax<5000) count++;
+  if(filterState.star>0) count++;
+  if(filterState.gps) count++;
+  count+=filterState.chips.length;
+  var badge=document.getElementById('filterBadge');
+  var btn=document.getElementById('filterBtn');
+  if(count>0){badge.style.display='flex';badge.textContent=count;btn.classList.add('active');}
+  else{badge.style.display='none';btn.classList.remove('active');}
+}
+function clearFilter(){
+  filterState={sort:'popular',priceMin:0,priceMax:5000,star:0,chips:[],gps:null,dist:null};
+  document.querySelectorAll('.fp-sort-btn').forEach(function(b){b.classList.remove('sel');});
+  document.querySelector('.fp-sort-btn').classList.add('sel');
+  document.querySelectorAll('.fp-star-btn').forEach(function(b){b.classList.remove('sel');});
+  document.querySelector('.fp-star-btn').classList.add('sel');
+  document.querySelectorAll('.fp-chip').forEach(function(b){b.classList.remove('sel');});
+  document.getElementById('priceMin').value=0;
+  document.getElementById('priceMax').value=5000;
+  document.getElementById('priceMinVal').textContent='₺0';
+  document.getElementById('priceMaxVal').textContent='₺5000+';
+  clearGPS();
+  updateFilterBadge();
+}
+function applyFilter(){ updateFilterBadge(); closeFilter(); }
+
+// ── FİLTRE GPS ──
+var fpGpsCoords = null;
+function fpUseGPS(){
+  var btn = document.getElementById('fpGpsBtn');
+  var txt = document.getElementById('fpGpsTxt');
+  if(!navigator.geolocation){ alert('Tarayıcınız konum desteklemiyor.'); return; }
+  txt.textContent = '📡 Konum alınıyor...';
+  btn.disabled = true;
+  navigator.geolocation.getCurrentPosition(function(pos){
+    fpGpsCoords = {lat: pos.coords.latitude, lng: pos.coords.longitude};
+    txt.textContent = '✅ Konum Alındı';
+    btn.classList.add('active');
+    btn.disabled = false;
+    document.getElementById('fpDistWrap').style.display = 'block';
+    filterState.gps = fpGpsCoords;
+    filterState.dist = parseInt(document.getElementById('fpDistRange').value);
+    updateFilterBadge();
+  }, function(){
+    txt.textContent = '📍 Konumumu Kullan';
+    btn.disabled = false;
+    alert('Konum alınamadı. Lütfen tarayıcı iznini kontrol edin.');
+  });
+}
+function updateDist(){
+  var v = document.getElementById('fpDistRange').value;
+  document.getElementById('fpDistVal').textContent = v + ' km';
+  filterState.dist = parseInt(v);
+  updateFilterBadge();
+}
+function clearGPS(){
+  fpGpsCoords = null;
+  filterState.gps = null;
+  filterState.dist = null;
+  document.getElementById('fpGpsTxt').textContent = '📍 Konumumu Kullan';
+  document.getElementById('fpGpsBtn').classList.remove('active');
+  document.getElementById('fpGpsBtn').disabled = false;
+  document.getElementById('fpDistWrap').style.display = 'none';
+  document.getElementById('fpDistRange').value = 5;
+  document.getElementById('fpDistVal').textContent = '5 km';
+  updateFilterBadge();
+}
+</script>
+</body>
+</html>

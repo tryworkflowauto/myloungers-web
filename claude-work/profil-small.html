@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Profilim | MyLoungers</title>
+<style>
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_1') format('opentype');font-weight:300;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_2') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_3') format('opentype');font-weight:500;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_4') format('opentype');font-weight:800;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_5') format('opentype');font-weight:900;font-display:swap}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A1628;--teal:#0ABAB5;--tdk:#089490;--tlt:#E6F7F7;
+  --or:#F5821F;--wh:#fff;--bg:#F4F6F9;--bd:#E5E7EB;
+  --i2:#374151;--i3:#6B7280;--r2:12px;--r3:16px;--r4:20px;
+  --sh:0 1px 4px rgba(0,0,0,.07);--sh2:0 4px 20px rgba(0,0,0,.12);
+  --green:#22C55E;--gdk:#16A34A;
+}
+html{scroll-behavior:smooth}
+body{font-family:'GR',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh}
+
+/* NAV */
+.nav{background:var(--wh);border-bottom:1px solid var(--bd);height:62px;display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:200;box-shadow:var(--sh)}
+.nav-logo{height:38px;cursor:pointer}
+.nav-back{display:flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:var(--i3);text-decoration:none;border:1.5px solid var(--bd);padding:6px 12px;border-radius:9px;transition:all .12s}
+.nav-back:hover{border-color:var(--navy);color:var(--navy)}
+.nav-sp{flex:1}
+.nav-logout{display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;color:var(--i3);background:none;border:1.5px solid var(--bd);padding:6px 12px;border-radius:9px;cursor:pointer;font-family:'GR',sans-serif;transition:all .12s}
+.nav-logout:hover{border-color:#EF4444;color:#EF4444}
+
+/* PROFİL HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#112240 60%,#0D3B6E 100%);padding:32px 24px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%230ABAB5' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:20px}
+.avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#0D8C89);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:900;color:#fff;flex-shrink:0;border:3px solid rgba(255,255,255,.2)}
+.hero-info{flex:1}
+.hero-name{font-size:1.3rem;font-weight:900;color:#fff;letter-spacing:-.02em}
+.hero-email{font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px}
+.hero-badges{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hbadge{display:flex;align-items:center;gap:5px;font-size:.65rem;font-weight:800;padding:4px 10px;border-radius:50px}
+.hbadge-teal{background:rgba(10,186,181,.2);color:var(--teal);border:1px solid rgba(10,186,181,.3)}
+.hbadge-or{background:rgba(245,130,31,.2);color:var(--or);border:1px solid rgba(245,130,31,.3)}
+.hbadge-wh{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15)}
+.hero-stats{display:flex;gap:24px}
+.hstat{text-align:center}
+.hstat-n{font-size:1.4rem;font-weight:900;color:#fff}
+.hstat-l{font-size:.65rem;color:rgba(255,255,255,.5);margin-top:2px}
+
+/* PAGE LAYOUT */
+.page{max-width:1100px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:240px 1fr;gap:22px;align-items:start}
+
+/* SOL MENÜ */
+.side-menu{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh);position:sticky;top:76px}
+.sm-head{padding:14px 18px;border-bottom:1px solid var(--bd);font-size:.7rem;font-weight:900;color:var(--i3);text-transform:uppercase;letter-spacing:.1em}
+.sm-item{display:flex;align-items:center;gap:10px;padding:12px 18px;cursor:pointer;transition:all .12s;border-left:3px solid transparent;font-size:.82rem;font-weight:700;color:var(--i2)}
+.sm-item:hover{background:var(--bg);color:var(--navy)}
+.sm-item.on{background:var(--tlt);color:var(--tdk);border-left-color:var(--teal);font-weight:900}
+.sm-item-ic{font-size:1rem;width:22px;text-align:center}
+.sm-cnt{margin-left:auto;background:var(--or);color:#fff;font-size:.6rem;font-weight:900;padding:1px 6px;border-radius:50px}
+.sm-divider{border:none;border-top:1px solid var(--bd);margin:6px 0}
+
+/* SEKME İÇERİĞİ */
+.tab-content{display:none}
+.tab-content.on{display:block}
+
+/* SECTION BAŞLIK */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sec-title{font-size:1rem;font-weight:900;color:var(--navy)}
+.sec-sub{font-size:.75rem;color:var(--i3);margin-top:2px}
+
+/* FİLTRE TAB */
+.filter-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.ftab{border:1.5px solid var(--bd);background:var(--wh);border-radius:9px;padding:6px 14px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:'GR',sans-serif;color:var(--i2);transition:all .12s}
+.ftab:hover{border-color:var(--navy)}
+.ftab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ftab-cnt{font-size:.6rem;opacity:.7;margin-left:3px}
+
+/* REZERVASYON KARTI */
+.res-card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r4);box-shadow:var(--sh);display:flex;overflow:hidden;transition:all .18s;margin-bottom:12px}
+.res-card:hover{box-shadow:var(--sh2);border-color:#C8D0DA}
+.rc-img-wrap{width:160px;flex-shrink:0;position:relative}
+.rc-img{width:100%;height:100%;object-fit:cover;display:block}
+.rc-status{position:absolute;top:10px;left:10px;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:6px;border:1px solid}
+.rc-body{flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.rc-name{font-size:.95rem;font-weight:900;color:var(--navy)}
+.rc-meta{display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap}
+.rc-cat{background:var(--tlt);color:var(--tdk);font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:50px;border:1px solid #B2EBEA}
+.rc-loc{font-size:.65rem;color:var(--i3)}
+.rc-code{font-size:.62rem;font-weight:900;color:var(--i3);background:var(--bg);padding:3px 8px;border-radius:6px;white-space:nowrap;border:1px solid var(--bd)}
+.rc-rows{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.rc-row{display:flex;align-items:center;gap:5px;font-size:.72rem}
+.rc-row-ic{font-size:.8rem;width:18px;text-align:center}
+.rc-row-t{color:var(--i3)}
+.rc-row-v{font-weight:700;color:var(--navy);margin-left:auto}
+.rc-footer{display:flex;align-items:center;gap:8px;padding-top:6px;border-top:1px solid var(--bg)}
+.rc-review-btn{background:none;border:1.5px solid #FDE68A;border-radius:8px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer;color:#92400E;font-family:'GR',sans-serif;transition:all .12s}
+.rc-review-btn:hover{background:#FFFBEB}
+.rc-stars{color:#F59E0B;font-size:.85rem;letter-spacing:1px}
+.rc-cancel{background:none;border:1.5px solid #FECACA;border-radius:8px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer;color:#DC2626;font-family:'GR',sans-serif;transition:all .12s}
+.rc-cancel:hover{background:#FEF2F2}
+.rc-detail{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer;font-family:'GR',sans-serif;transition:all .12s}
+.rc-detail:hover{background:var(--tdk)}
+
+/* BOŞ DURUM */
+.empty-state{text-align:center;padding:48px 20px;color:var(--i3)}
+.empty-ic{font-size:3rem;margin-bottom:10px}
+.empty-t{font-size:.95rem;font-weight:800;color:var(--navy);margin-bottom:5px}
+.empty-s{font-size:.78rem}
+
+/* PROFİL BİLGİLERİ */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pf-group{display:flex;flex-direction:column;gap:5px}
+.pf-group.full{grid-column:1/-1}
+.pf-label{font-size:.68rem;font-weight:800;color:var(--i3);text-transform:uppercase;letter-spacing:.08em}
+.pf-input{border:1.5px solid var(--bd);border-radius:10px;padding:10px 14px;font-size:.85rem;font-family:'GR',sans-serif;color:var(--navy);outline:none;transition:border .12s;background:var(--wh)}
+.pf-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,186,181,.1)}
+.pf-input:disabled{background:var(--bg);color:var(--i3)}
+.pf-save{background:var(--or);color:#fff;border:none;border-radius:11px;padding:12px 28px;font-size:.85rem;font-weight:900;cursor:pointer;font-family:'GR',sans-serif;transition:all .12s;display:flex;align-items:center;gap:7px}
+.pf-save:hover{background:#DC6C10}
+
+/* BİLDİRİM KARTI */
+.notif-card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r3);padding:14px 18px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:all .12s}
+.notif-card:hover{border-color:#C8D0DA;box-shadow:var(--sh)}
+.notif-card.unread{border-left:3px solid var(--teal);background:linear-gradient(90deg,var(--tlt),var(--wh))}
+.notif-ic{font-size:1.2rem;flex-shrink:0;width:28px;text-align:center}
+.notif-body{flex:1}
+.notif-t{font-size:.8rem;font-weight:800;color:var(--navy)}
+.notif-s{font-size:.72rem;color:var(--i3);margin-top:2px;line-height:1.45}
+.notif-time{font-size:.62rem;color:var(--i3);flex-shrink:0;margin-top:2px}
+.notif-dot{width:8px;height:8px;background:var(--teal);border-radius:50%;flex-shrink:0;margin-top:4px}
+
+/* FAVORİLER */
+.fav-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fav-card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r3);overflow:hidden;cursor:pointer;transition:all .15s}
+.fav-card:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.fav-img{width:100%;height:110px;object-fit:cover}
+.fav-body{padding:10px 12px}
+.fav-name{font-size:.82rem;font-weight:900;color:var(--navy)}
+.fav-meta{font-size:.65rem;color:var(--i3);margin-top:3px}
+.fav-remove{background:none;border:none;cursor:pointer;color:#EF4444;font-size:.65rem;font-weight:700;margin-top:6px;font-family:'GR',sans-serif;padding:0}
+
+/* GÜVENLİK */
+.sec-item{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r3);padding:16px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
+.sec-item-ic{font-size:1.3rem;width:32px;text-align:center}
+.sec-item-body{flex:1}
+.sec-item-t{font-size:.82rem;font-weight:800;color:var(--navy)}
+.sec-item-s{font-size:.7rem;color:var(--i3);margin-top:2px}
+.sec-item-btn{background:none;border:1.5px solid var(--bd);border-radius:9px;padding:7px 14px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:'GR',sans-serif;color:var(--navy);transition:all .12s;white-space:nowrap}
+.sec-item-btn:hover{border-color:var(--navy)}
+.sec-item-btn.danger{border-color:#FECACA;color:#DC2626}
+.sec-item-btn.danger:hover{background:#FEF2F2}
+
+/* DEĞERLENDİRME MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:16px}
+.modal-overlay.on{display:flex}
+.modal{background:var(--wh);border-radius:var(--r4);width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);overflow:hidden}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:.95rem;font-weight:900;color:var(--navy)}
+.modal-close{background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--i3);padding:2px 6px;border-radius:6px}
+.modal-close:hover{background:var(--bg)}
+.modal-body{padding:22px}
+.star-row{display:flex;justify-content:center;gap:8px;margin-bottom:20px}
+.star-btn{font-size:2rem;cursor:pointer;transition:transform .1s;background:none;border:none;line-height:1}
+.star-btn:hover,.star-btn.on{transform:scale(1.2)}
+.review-ta{width:100%;border:1.5px solid var(--bd);border-radius:10px;padding:12px 14px;font-size:.82rem;font-family:'GR',sans-serif;resize:vertical;min-height:90px;outline:none;transition:border .12s}
+.review-ta:focus{border-color:var(--teal)}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--bd);display:flex;gap:10px}
+.modal-submit{flex:1;background:var(--or);color:#fff;border:none;border-radius:11px;padding:12px;font-size:.85rem;font-weight:900;cursor:pointer;font-family:'GR',sans-serif}
+.modal-cancel{background:none;border:1.5px solid var(--bd);border-radius:11px;padding:12px 16px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'GR',sans-serif;color:var(--i3)}
+
+/* MOBİL */
+@media(max-width:1024px){
+  .page{grid-template-columns:1fr}
+  .side-menu{position:static;display:flex;overflow-x:auto;border-radius:var(--r3)}
+  .side-menu .sm-head{display:none}
+  .sm-item{padding:12px 16px;white-space:nowrap;border-left:none;border-bottom:3px solid transparent}
+  .sm-item.on{border-left:none;border-bottom-color:var(--teal);background:var(--tlt)}
+  .sm-divider{display:none}
+  .hero-stats{display:none}
+}
+@media(max-width:768px){
+  .hero{padding:20px 14px}
+  .hero-inner{flex-wrap:wrap;gap:14px}
+  .page{padding:14px 12px 60px}
+  .res-card{flex-direction:column}
+  .rc-img-wrap{width:100%;height:160px}
+  .rc-rows{grid-template-columns:1fr}
+  .profile-grid{grid-template-columns:1fr}
+  .pf-group.full{grid-column:auto}
+  .fav-grid{grid-template-columns:1fr}
+  .nav{padding:0 14px}
+}
+@supports(padding:max(0px)){
+  .nav{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+}
+
+/* ── QR BÖLÜMÜ ── */
+.qr-section{padding:20px;background:#fff;margin:0 0 16px;border-radius:var(--r);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.qr-section-title{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--i3);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.qr-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qr-btn{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;border:none;cursor:pointer;font-family:'GR',sans-serif;text-align:left;transition:all .15s}
+.qr-btn-primary{background:var(--or);color:#fff}
+.qr-btn-primary:hover{background:#e07015}
+.qr-btn-secondary{background:#4B5563;color:#fff}
+.qr-btn-secondary:hover{background:#374151}
+.qr-btn-ico{font-size:1.3rem;flex-shrink:0}
+.qr-btn-text{display:flex;flex-direction:column}
+.qr-btn-title{font-size:.82rem;font-weight:800;line-height:1.2}
+.qr-btn-sub{font-size:.65rem;opacity:.8;margin-top:2px;line-height:1.3}
+
+/* ── AKTİF ŞEZLONGLARIM ── */
+.szl-section{padding:20px;background:#fff;margin:0 0 16px;border-radius:var(--r);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.szl-empty{text-align:center;padding:28px 16px}
+.szl-empty-ico{font-size:2.5rem;margin-bottom:10px;opacity:.4}
+.szl-empty-txt{font-size:.8rem;color:var(--i3);margin-bottom:14px;line-height:1.6}
+.szl-empty-btn{display:inline-block;background:var(--tdk);color:#fff;padding:10px 24px;border-radius:50px;font-size:.82rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:'GR',sans-serif}
+.szl-card{border:1.5px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.szl-card-ico{width:44px;height:44px;border-radius:10px;background:var(--tlt);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.szl-card-info{flex:1}
+.szl-card-name{font-size:.85rem;font-weight:800;color:var(--navy)}
+.szl-card-meta{font-size:.7rem;color:var(--i3);margin-top:2px}
+.szl-card-status{background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:50px}
+
+/* ── ALT NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bd);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom)}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;gap:4px;cursor:pointer;border:none;background:none;font-family:'GR',sans-serif;color:var(--i3);font-size:.62rem;font-weight:600;transition:color .15s;text-decoration:none}
+.bn-item.on{color:var(--navy)}
+.bn-item svg{width:20px;height:20px;flex-shrink:0}
+.bn-item.on svg{stroke:var(--navy)}
+.bn-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--navy)}
+.page-pad{padding-bottom:72px}
+
+/* ── MODAL ── */
+.kod-modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center}
+.kod-modal.open{display:flex}
+.kod-sheet{background:#fff;border-radius:20px 20px 0 0;padding:28px 20px 32px;width:100%;max-width:480px}
+.kod-sheet h3{font-size:1rem;font-weight:900;margin-bottom:6px;color:var(--navy)}
+.kod-sheet p{font-size:.78rem;color:var(--i3);margin-bottom:16px}
+.kod-input{width:100%;padding:14px;border:2px solid var(--bd);border-radius:12px;font-size:1.1rem;font-weight:700;text-align:center;letter-spacing:.3em;font-family:'GR',sans-serif;outline:none;margin-bottom:12px}
+.kod-input:focus{border-color:var(--tdk)}
+.kod-submit{width:100%;padding:13px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:'GR',sans-serif}
+.kod-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--i3)}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+/* ── SEKME GEÇİŞİ ── */
+window.showTab = function(id) {
+  document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('on'); });
+  document.querySelectorAll('.sm-item').forEach(function(m){ m.classList.remove('on'); });
+  document.getElementById('tab-'+id).classList.add('on');
+  document.querySelector('[data-tab="'+id+'"]').classList.add('on');
+};
+
+/* ── RES FİLTRE ── */
+window.filterRes = function(status) {
+  document.querySelectorAll('.ftab').forEach(function(t){ t.classList.remove('on'); });
+  event.currentTarget.classList.add('on');
+  document.querySelectorAll('.res-card').forEach(function(c){
+    c.style.display = (status==='all' || c.dataset.status===status) ? 'flex' : 'none';
+  });
+};
+
+/* ── DEĞERLENDİRME MODAL ── */
+var reviewTarget = null;
+var selectedStar = 0;
+
+window.openReview = function(btn) {
+  reviewTarget = btn;
+  selectedStar = 0;
+  document.querySelectorAll('.star-btn').forEach(function(s){ s.classList.remove('on'); s.textContent='☆'; });
+  document.getElementById('reviewTa').value = '';
+  document.getElementById('reviewModal').classList.add('on');
+};
+
+window.closeReview = function() {
+  document.getElementById('reviewModal').classList.remove('on');
+};
+
+window.setStar = function(n) {
+  selectedStar = n;
+  document.querySelectorAll('.star-btn').forEach(function(s,i){
+    s.textContent = i < n ? '★' : '☆';
+    s.classList.toggle('on', i < n);
+  });
+};
+
+window.submitReview = function() {
+  if(!selectedStar){ alert('Lütfen puan seçin'); return; }
+  if(reviewTarget) {
+    var stars = document.createElement('div');
+    stars.className = 'rc-stars';
+    stars.textContent = '★'.repeat(selectedStar) + '☆'.repeat(5-selectedStar);
+    reviewTarget.replaceWith(stars);
+  }
+  closeReview();
+};
+
+/* ── İPTAL ── */
+window.cancelRes = function(btn) {
+  if(confirm('Rezervasyonu iptal etmek istediginize emin misiniz? Iptal politikasina gore iade islemi baslatilacaktir.')) {
+    var card = btn.closest('.res-card');
+    card.dataset.status = 'cancel';
+    card.querySelector('.rc-status').textContent = '✗ İptal';
+    card.querySelector('.rc-status').style.cssText = 'background:#FEF2F2;color:#DC2626;border-color:#FECACA';
+    btn.remove();
+  }
+};
+
+/* ── PROFİL KAYDET ── */
+window.saveProfile = function() {
+  var btn = document.getElementById('saveBtn');
+  btn.textContent = '✓ Kaydedildi';
+  btn.style.background = '#16A34A';
+  setTimeout(function(){ btn.innerHTML='💾 Değişiklikleri Kaydet'; btn.style.background=''; }, 2000);
+};
+
+/* ── FAV KALDIR ── */
+window.removeFav = function(btn) {
+  btn.closest('.fav-card').style.opacity='0';
+  setTimeout(function(){ btn.closest('.fav-card').remove(); }, 300);
+};
+
+/* ── BİLDİRİM OKUNDU ── */
+document.querySelectorAll('.notif-card.unread').forEach(function(n){
+  n.addEventListener('click', function(){
+    this.classList.remove('unread');
+    var dot = this.querySelector('.notif-dot');
+    if(dot) dot.remove();
+  });
+});
+
+});
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="myloungers-v33-fixed.html"><img class="nav-logo" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_1" alt="MyLoungers"></a>
+  <a href="myloungers-v33-fixed.html" class="nav-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Ana Sayfa
+  </a>
+  <span class="nav-sp"></span>
+  <button class="nav-logout" onclick="window.location.href='giris.html'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Çıkış
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="avatar">Z</div>
+    <div class="hero-info">
+      <div class="hero-name">Zafer Bey</div>
+      <div class="hero-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1f657e797a6d5f7a677e726f737a317c7072">[email&#160;protected]</a> · +90 532 XXX XX XX</div>
+      <div class="hero-badges">
+        <span class="hbadge hbadge-teal">✓ E-posta Doğrulandı</span>
+        <span class="hbadge hbadge-or">🏖️ Sadık Üye</span>
+        <span class="hbadge hbadge-wh">📅 Üye: Ocak 2025</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">5</div><div class="hstat-l">Rezervasyon</div></div>
+      <div class="hstat"><div class="hstat-n">₺14.750</div><div class="hstat-l">Toplam Harcama</div></div>
+      <div class="hstat"><div class="hstat-n">4</div><div class="hstat-l">Favori Tesis</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- QR OKU / KOD GİR -->
+<div class="qr-section">
+  <div class="qr-section-title">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM17 17h3v3h-3zM14 20h3"/></svg>
+    Şezlong Girişi
+  </div>
+  <div class="qr-btns">
+    <button class="qr-btn qr-btn-primary" onclick="startQR()">
+      <div class="qr-btn-ico">📷</div>
+      <div class="qr-btn-text">
+        <span class="qr-btn-title">QR Oku</span>
+        <span class="qr-btn-sub">Kameranı kullanarak QR kodu okutun</span>
+      </div>
+    </button>
+    <button class="qr-btn qr-btn-secondary" onclick="openKodModal()">
+      <div class="qr-btn-ico">⌨️</div>
+      <div class="qr-btn-text">
+        <span class="qr-btn-title">Kod Gir</span>
+        <span class="qr-btn-sub">Şezlong kodunu girerek giriş yap</span>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- AKTİF ŞEZLONGLARIM -->
+<div class="szl-section">
+  <div class="qr-section-title">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Aktif Şezlonglarım
+  </div>
+  <div id="aktifSzlList">
+    <div class="szl-empty">
+      <div class="szl-empty-ico">⛱️</div>
+      <div class="szl-empty-txt">Henüz aktif bir şezlongunuz bulunmuyor.<br>Rezervasyon yaparak şezlong kiralayabilirsiniz.</div>
+      <a href="myloungers-v33-fixed.html" class="szl-empty-btn">Rezervasyon Yap</a>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page page-pad">
+
+  <!-- SOL MENÜ -->
+  <nav class="side-menu">
+    <div class="sm-head">Hesabım</div>
+    <div class="sm-item on" data-tab="reservations" onclick="showTab('reservations')">
+      <span class="sm-item-ic">🏖️</span> Rezervasyonlarım <span class="sm-cnt">5</span>
+    </div>
+    <div class="sm-item" data-tab="favorites" onclick="showTab('favorites')">
+      <span class="sm-item-ic">❤️</span> Favorilerim <span class="sm-cnt" style="background:var(--teal)">4</span>
+    </div>
+    <div class="sm-item" data-tab="notifications" onclick="showTab('notifications')">
+      <span class="sm-item-ic">🔔</span> Bildirimler <span class="sm-cnt">3</span>
+    </div>
+    <hr class="sm-divider">
+    <div class="sm-item" data-tab="profile" onclick="showTab('profile')">
+      <span class="sm-item-ic">👤</span> Profil Bilgileri
+    </div>
+    <div class="sm-item" data-tab="security" onclick="showTab('security')">
+      <span class="sm-item-ic">🔒</span> Güvenlik
+    </div>
+  </nav>
+
+  <!-- SAĞ İÇERİK -->
+  <div>
+
+    <!-- ══ REZERVASYONLARIM ══ -->
+    <div class="tab-content on" id="tab-reservations">
+      <div class="sec-head">
+        <div><div class="sec-title">🏖️ Rezervasyonlarım</div><div class="sec-sub">Tüm geçmiş ve yaklaşan rezervasyonlarınız</div></div>
+      </div>
+      <div class="filter-tabs">
+        <button class="ftab on" onclick="filterRes('all')">Tümü <span class="ftab-cnt">(5)</span></button>
+        <button class="ftab" onclick="filterRes('upcoming')">Yaklaşan <span class="ftab-cnt">(1)</span></button>
+        <button class="ftab" onclick="filterRes('active')">Aktif <span class="ftab-cnt">(1)</span></button>
+        <button class="ftab" onclick="filterRes('past')">Geçmiş <span class="ftab-cnt">(2)</span></button>
+        <button class="ftab" onclick="filterRes('cancel')">İptal <span class="ftab-cnt">(1)</span></button>
+      </div>
+      <div class="res-card" data-status="upcoming">
+      <div class="rc-img-wrap">
+        <img class="rc-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_2" alt="Zuzuu Beach Hotel">
+        <span class="rc-status" style="background:#EFF6FF;color:#2563EB;border-color:#BFDBFE">📅 Yaklaşan</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-top">
+          <div>
+            <div class="rc-name">Zuzuu Beach Hotel</div>
+            <div class="rc-meta"><span class="rc-cat">Beach Club</span><span class="rc-loc">📍 Bodrum</span></div>
+          </div>
+          <div class="rc-code">MYL-7842</div>
+        </div>
+        <div class="rc-rows">
+          <div class="rc-row"><span class="rc-row-ic">📅</span><span class="rc-row-t">Tarih</span><span class="rc-row-v">15–17 Tem 2025</span></div>
+          <div class="rc-row"><span class="rc-row-ic">🛏</span><span class="rc-row-t">Şezlong</span><span class="rc-row-v">A3, A4 · İskele</span></div>
+          <div class="rc-row"><span class="rc-row-ic">📆</span><span class="rc-row-t">Süre</span><span class="rc-row-v">2 gün</span></div>
+          <div class="rc-row"><span class="rc-row-ic">💰</span><span class="rc-row-t">Ödenen</span><span class="rc-row-v" style="color:#16A34A;font-weight:900">₺5.000</span></div>
+        </div>
+        <div class="rc-footer">
+          
+          <div style="display:flex;gap:8px;margin-left:auto">
+            <button class="rc-cancel" onclick="cancelRes(this)">İptal Et</button>
+            <button class="rc-detail" onclick="window.location.href='tesis-zuzu.html'">Tesise Git →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="res-card" data-status="active">
+      <div class="rc-img-wrap">
+        <img class="rc-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_3" alt="Marmaris Beach Resort">
+        <span class="rc-status" style="background:#F0FDF4;color:#16A34A;border-color:#BBF7D0">✅ Aktif</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-top">
+          <div>
+            <div class="rc-name">Marmaris Beach Resort</div>
+            <div class="rc-meta"><span class="rc-cat">Beach Club</span><span class="rc-loc">📍 Marmaris</span></div>
+          </div>
+          <div class="rc-code">MYL-7651</div>
+        </div>
+        <div class="rc-rows">
+          <div class="rc-row"><span class="rc-row-ic">📅</span><span class="rc-row-t">Tarih</span><span class="rc-row-v">3–5 Haz 2025</span></div>
+          <div class="rc-row"><span class="rc-row-ic">🛏</span><span class="rc-row-t">Şezlong</span><span class="rc-row-v">B7 · Silver</span></div>
+          <div class="rc-row"><span class="rc-row-ic">📆</span><span class="rc-row-t">Süre</span><span class="rc-row-v">2 gün</span></div>
+          <div class="rc-row"><span class="rc-row-ic">💰</span><span class="rc-row-t">Ödenen</span><span class="rc-row-v" style="color:#16A34A;font-weight:900">₺3.400</span></div>
+        </div>
+        <div class="rc-footer">
+          
+          <div style="display:flex;gap:8px;margin-left:auto">
+            <button class="rc-cancel" onclick="cancelRes(this)">İptal Et</button>
+            <button class="rc-detail" onclick="window.location.href='tesis-zuzu.html'">Tesise Git →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="res-card" data-status="past">
+      <div class="rc-img-wrap">
+        <img class="rc-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_4" alt="Fethiye Paradise Club">
+        <span class="rc-status" style="background:#F9FAFB;color:#6B7280;border-color:#E5E7EB">✓ Tamamlandı</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-top">
+          <div>
+            <div class="rc-name">Fethiye Paradise Club</div>
+            <div class="rc-meta"><span class="rc-cat">Beach Club</span><span class="rc-loc">📍 Fethiye</span></div>
+          </div>
+          <div class="rc-code">MYL-7420</div>
+        </div>
+        <div class="rc-rows">
+          <div class="rc-row"><span class="rc-row-ic">📅</span><span class="rc-row-t">Tarih</span><span class="rc-row-v">20 May 2025</span></div>
+          <div class="rc-row"><span class="rc-row-ic">🛏</span><span class="rc-row-t">Şezlong</span><span class="rc-row-v">C2 · VIP</span></div>
+          <div class="rc-row"><span class="rc-row-ic">📆</span><span class="rc-row-t">Süre</span><span class="rc-row-v">1 gün</span></div>
+          <div class="rc-row"><span class="rc-row-ic">💰</span><span class="rc-row-t">Ödenen</span><span class="rc-row-v" style="color:#16A34A;font-weight:900">₺1.500</span></div>
+        </div>
+        <div class="rc-footer">
+          <div class="rc-stars">★★★★☆</div>
+          <div style="display:flex;gap:8px;margin-left:auto">
+            
+            <button class="rc-detail" onclick="window.location.href='tesis-zuzu.html'">Tesise Git →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="res-card" data-status="past">
+      <div class="rc-img-wrap">
+        <img class="rc-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_5" alt="Bodrum Luxury Suites">
+        <span class="rc-status" style="background:#F9FAFB;color:#6B7280;border-color:#E5E7EB">✓ Tamamlandı</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-top">
+          <div>
+            <div class="rc-name">Bodrum Luxury Suites</div>
+            <div class="rc-meta"><span class="rc-cat">Hotel</span><span class="rc-loc">📍 Bodrum</span></div>
+          </div>
+          <div class="rc-code">MYL-7201</div>
+        </div>
+        <div class="rc-rows">
+          <div class="rc-row"><span class="rc-row-ic">📅</span><span class="rc-row-t">Tarih</span><span class="rc-row-v">1–2 May 2025</span></div>
+          <div class="rc-row"><span class="rc-row-ic">🛏</span><span class="rc-row-t">Şezlong</span><span class="rc-row-v">D1, D2 · VIP</span></div>
+          <div class="rc-row"><span class="rc-row-ic">📆</span><span class="rc-row-t">Süre</span><span class="rc-row-v">1 gün</span></div>
+          <div class="rc-row"><span class="rc-row-ic">💰</span><span class="rc-row-t">Ödenen</span><span class="rc-row-v" style="color:#16A34A;font-weight:900">₺3.600</span></div>
+        </div>
+        <div class="rc-footer">
+          <button class="rc-review-btn" onclick="openReview(this)">⭐ Değerlendir</button>
+          <div style="display:flex;gap:8px;margin-left:auto">
+            
+            <button class="rc-detail" onclick="window.location.href='tesis-zuzu.html'">Tesise Git →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="res-card" data-status="cancel">
+      <div class="rc-img-wrap">
+        <img class="rc-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_6" alt="Zuzuu Beach Hotel">
+        <span class="rc-status" style="background:#FEF2F2;color:#DC2626;border-color:#FECACA">✗ İptal</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-top">
+          <div>
+            <div class="rc-name">Zuzuu Beach Hotel</div>
+            <div class="rc-meta"><span class="rc-cat">Beach Club</span><span class="rc-loc">📍 Bodrum</span></div>
+          </div>
+          <div class="rc-code">MYL-6988</div>
+        </div>
+        <div class="rc-rows">
+          <div class="rc-row"><span class="rc-row-ic">📅</span><span class="rc-row-t">Tarih</span><span class="rc-row-v">10 Nis 2025</span></div>
+          <div class="rc-row"><span class="rc-row-ic">🛏</span><span class="rc-row-t">Şezlong</span><span class="rc-row-v">A5 · İskele</span></div>
+          <div class="rc-row"><span class="rc-row-ic">📆</span><span class="rc-row-t">Süre</span><span class="rc-row-v">1 gün</span></div>
+          <div class="rc-row"><span class="rc-row-ic">💰</span><span class="rc-row-t">Ödenen</span><span class="rc-row-v" style="color:#16A34A;font-weight:900">₺1.250</span></div>
+        </div>
+        <div class="rc-footer">
+          
+          <div style="display:flex;gap:8px;margin-left:auto">
+            
+            <button class="rc-detail" onclick="window.location.href='tesis-zuzu.html'">Tesise Git →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ══ FAVORİLER ══ -->
+    <div class="tab-content" id="tab-favorites">
+      <div class="sec-head">
+        <div><div class="sec-title">❤️ Favorilerim</div><div class="sec-sub">Kaydettiğiniz tesisler</div></div>
+      </div>
+      <div class="fav-grid">
+        <div class="fav-card" onclick="window.location.href='tesis-zuzu.html'">
+          <img class="fav-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_7" alt="">
+          <div class="fav-body">
+            <div class="fav-name">Zuzuu Beach Hotel</div>
+            <div class="fav-meta">🏖️ Beach Club · Bodrum · ⭐ 9.6</div>
+            <button class="fav-remove" onclick="event.stopPropagation();removeFav(this)">✕ Listeden çıkar</button>
+          </div>
+        </div>
+        <div class="fav-card">
+          <img class="fav-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_8" alt="">
+          <div class="fav-body">
+            <div class="fav-name">Marmaris Beach Resort</div>
+            <div class="fav-meta">🏖️ Beach Club · Marmaris · ⭐ 9.2</div>
+            <button class="fav-remove" onclick="event.stopPropagation();removeFav(this)">✕ Listeden çıkar</button>
+          </div>
+        </div>
+        <div class="fav-card">
+          <img class="fav-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_9" alt="">
+          <div class="fav-body">
+            <div class="fav-name">Fethiye Paradise Club</div>
+            <div class="fav-meta">🏖️ Beach Club · Fethiye · ⭐ 9.0</div>
+            <button class="fav-remove" onclick="event.stopPropagation();removeFav(this)">✕ Listeden çıkar</button>
+          </div>
+        </div>
+        <div class="fav-card">
+          <img class="fav-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_10" alt="">
+          <div class="fav-body">
+            <div class="fav-name">Bodrum Luxury Suites</div>
+            <div class="fav-meta">🏨 Hotel · Bodrum · ⭐ 9.4</div>
+            <button class="fav-remove" onclick="event.stopPropagation();removeFav(this)">✕ Listeden çıkar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BİLDİRİMLER ══ -->
+    <div class="tab-content" id="tab-notifications">
+      <div class="sec-head">
+        <div><div class="sec-title">🔔 Bildirimler</div><div class="sec-sub">3 okunmamış bildirim</div></div>
+      </div>
+      <div class="notif-card unread">
+        <div class="notif-dot"></div>
+        <span class="notif-ic">🎉</span>
+        <div class="notif-body">
+          <div class="notif-t">Rezervasyonunuz Onaylandı</div>
+          <div class="notif-s">Zuzuu Beach Hotel · 15–17 Temmuz rezervasyonunuz onaylandı. QR kodunuz hazır.</div>
+        </div>
+        <span class="notif-time">2 saat önce</span>
+      </div>
+      <div class="notif-card unread">
+        <div class="notif-dot"></div>
+        <span class="notif-ic">⏰</span>
+        <div class="notif-body">
+          <div class="notif-t">Yarın Rezervasyonunuz Var</div>
+          <div class="notif-s">Marmaris Beach Resort · 3 Haziran için rezervasyonunuzu unutmayın!</div>
+        </div>
+        <span class="notif-time">5 saat önce</span>
+      </div>
+      <div class="notif-card unread">
+        <div class="notif-dot"></div>
+        <span class="notif-ic">💰</span>
+        <div class="notif-body">
+          <div class="notif-t">Erken Rezervasyon İndirimi</div>
+          <div class="notif-s">Bodrum'daki favori tesislerinizde %20 erken rezervasyon indirimi başladı!</div>
+        </div>
+        <span class="notif-time">1 gün önce</span>
+      </div>
+      <div class="notif-card">
+        <span class="notif-ic">✅</span>
+        <div class="notif-body">
+          <div class="notif-t">Ödeme Tamamlandı</div>
+          <div class="notif-s">₺1.500 ödemeniz başarıyla alındı · Fethiye Paradise Club</div>
+        </div>
+        <span class="notif-time">15 gün önce</span>
+      </div>
+      <div class="notif-card">
+        <span class="notif-ic">⭐</span>
+        <div class="notif-body">
+          <div class="notif-t">Değerlendirme Hatırlatması</div>
+          <div class="notif-s">Bodrum Luxury Suites deneyiminizi paylaşmak ister misiniz?</div>
+        </div>
+        <span class="notif-time">20 gün önce</span>
+      </div>
+    </div>
+
+    <!-- ══ PROFİL BİLGİLERİ ══ -->
+    <div class="tab-content" id="tab-profile">
+      <div class="sec-head">
+        <div><div class="sec-title">👤 Profil Bilgileri</div><div class="sec-sub">Kişisel bilgilerinizi güncelleyin</div></div>
+      </div>
+      <div style="background:var(--wh);border:1px solid var(--bd);border-radius:var(--r4);box-shadow:var(--sh);padding:22px">
+        <div class="profile-grid">
+          <div class="pf-group">
+            <label class="pf-label">Ad</label>
+            <input class="pf-input" type="text" value="Zafer">
+          </div>
+          <div class="pf-group">
+            <label class="pf-label">Soyad</label>
+            <input class="pf-input" type="text" value="Bey">
+          </div>
+          <div class="pf-group">
+            <label class="pf-label">Telefon</label>
+            <input class="pf-input" type="tel" value="+90 532 XXX XX XX">
+          </div>
+          <div class="pf-group">
+            <label class="pf-label">E-posta</label>
+            <input class="pf-input" type="email" value="zafer@example.com">
+          </div>
+          <div class="pf-group full">
+            <label class="pf-label">Doğum Tarihi</label>
+            <input class="pf-input" type="date" value="1985-01-01">
+          </div>
+          <div class="pf-group full">
+            <label class="pf-label">Şehir</label>
+            <input class="pf-input" type="text" value="Bodrum, Muğla">
+          </div>
+          <div class="pf-group full">
+            <label class="pf-label">Tercih Edilen Dil</label>
+            <select class="pf-input">
+              <option selected>🇹🇷 Türkçe</option>
+              <option>🇬🇧 English</option>
+              <option>🇷🇺 Русский</option>
+              <option>🇩🇪 Deutsch</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;justify-content:flex-end">
+          <button class="pf-save" id="saveBtn" onclick="saveProfile()">
+            💾 Değişiklikleri Kaydet
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ GÜVENLİK ══ -->
+    <div class="tab-content" id="tab-security">
+      <div class="sec-head">
+        <div><div class="sec-title">🔒 Güvenlik</div><div class="sec-sub">Hesap güvenliği ve gizlilik</div></div>
+      </div>
+      <div class="sec-item">
+        <span class="sec-item-ic">🔑</span>
+        <div class="sec-item-body">
+          <div class="sec-item-t">Şifre</div>
+          <div class="sec-item-s">Son değişiklik: 3 ay önce</div>
+        </div>
+        <button class="sec-item-btn">Şifreyi Değiştir</button>
+      </div>
+      <div class="sec-item">
+        <span class="sec-item-ic">📱</span>
+        <div class="sec-item-body">
+          <div class="sec-item-t">İki Faktörlü Doğrulama</div>
+          <div class="sec-item-s">SMS ile doğrulama aktif</div>
+        </div>
+        <button class="sec-item-btn">Yönet</button>
+      </div>
+      <div class="sec-item">
+        <span class="sec-item-ic">📧</span>
+        <div class="sec-item-body">
+          <div class="sec-item-t">E-posta Bildirimleri</div>
+          <div class="sec-item-s">Rezervasyon ve kampanya bildirimleri açık</div>
+        </div>
+        <button class="sec-item-btn">Ayarla</button>
+      </div>
+      <div class="sec-item">
+        <span class="sec-item-ic">📋</span>
+        <div class="sec-item-body">
+          <div class="sec-item-t">Veri ve Gizlilik</div>
+          <div class="sec-item-s">KVKK kapsamında verilerinizi yönetin</div>
+        </div>
+        <button class="sec-item-btn">Görüntüle</button>
+      </div>
+      <div class="sec-item" style="border-color:#FECACA">
+        <span class="sec-item-ic">🗑️</span>
+        <div class="sec-item-body">
+          <div class="sec-item-t" style="color:#DC2626">Hesabı Sil</div>
+          <div class="sec-item-s">Bu işlem geri alınamaz</div>
+        </div>
+        <button class="sec-item-btn danger">Hesabı Sil</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DEĞERLENDİRME MODAL -->
+<div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeReview()">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">⭐ Tesis Değerlendirmesi</span>
+      <button class="modal-close" onclick="closeReview()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;font-size:.78rem;color:var(--i3);margin-bottom:12px">Deneyiminizi puanlayın</div>
+      <div class="star-row">
+        <button class="star-btn" onclick="setStar(1)">☆</button>
+        <button class="star-btn" onclick="setStar(2)">☆</button>
+        <button class="star-btn" onclick="setStar(3)">☆</button>
+        <button class="star-btn" onclick="setStar(4)">☆</button>
+        <button class="star-btn" onclick="setStar(5)">☆</button>
+      </div>
+      <textarea class="review-ta" id="reviewTa" placeholder="Deneyiminizi paylaşın... (opsiyonel)"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-cancel" onclick="closeReview()">Vazgeç</button>
+      <button class="modal-submit" onclick="submitReview()">Gönder →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALT NAV -->
+<nav class="bottom-nav">
+  <a href="myloungers-v33-fixed.html" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Anasayfa
+  </a>
+  <a href="#" class="bn-item" onclick="document.querySelector('.filter-tabs .ftab:nth-child(3)') && document.querySelector('.filter-tabs .ftab:nth-child(3)').click()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    Favorilerim
+  </a>
+  <a href="#" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    Yardım
+  </a>
+  <a href="profil.html" class="bn-item on">
+    <div style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;border:2px solid var(--navy)">Z</div>
+    Hesabım
+  </a>
+</nav>
+
+<!-- KOD GİR MODAL -->
+<div class="kod-modal" id="kodModal" onclick="if(event.target===this)closeKodModal()">
+  <div class="kod-sheet" style="position:relative">
+    <button class="kod-close" onclick="closeKodModal()">✕</button>
+    <h3>⌨️ Şezlong Kodu Gir</h3>
+    <p>Şezlong üzerindeki kodu girerek rezervasyonunuzu aktif edin.</p>
+    <input class="kod-input" id="kodInput" placeholder="MLG - XXXX" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+    <button class="kod-submit" onclick="submitKod()">Kodu Doğrula →</button>
+  </div>
+</div>
+
+<script>
+function openKodModal(){ document.getElementById('kodModal').classList.add('open'); document.getElementById('kodInput').focus(); }
+function closeKodModal(){ document.getElementById('kodModal').classList.remove('open'); }
+function submitKod(){
+  var v = document.getElementById('kodInput').value.trim();
+  if(v.length < 3){ alert('Lütfen geçerli bir kod girin.'); return; }
+  closeKodModal();
+  alert('✅ Kod doğrulandı! Şezlong aktif edildi.');
+}
+function startQR(){
+  alert('📷 QR okuyucu mobil uygulamamızda aktif olacak!\n\nWeb versiyonunda "Kod Gir" seçeneğini kullanabilirsiniz.');
+}
+</script>
+
+</body>
+</html>

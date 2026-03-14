@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rezervasyon | MyLoungers</title>
+<style>
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_1') format('opentype');font-weight:300;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_2') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_3') format('opentype');font-weight:500;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_4') format('opentype');font-weight:800;font-display:swap}
+@font-face{font-family:'GR';src:url('data:font/otf;base64,PLACEHOLDER_FONT_5') format('opentype');font-weight:900;font-display:swap}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A1628;--teal:#0ABAB5;--tdk:#089490;--tlt:#E6F7F7;
+  --or:#F5821F;--wh:#fff;--bg:#F4F6F9;--bd:#E5E7EB;
+  --i2:#374151;--i3:#6B7280;--r2:12px;--r3:16px;--r4:20px;
+  --sh:0 1px 4px rgba(0,0,0,.07);--sh2:0 4px 20px rgba(0,0,0,.12);
+  --green:#22C55E;--green-dk:#16A34A;
+}
+html{scroll-behavior:smooth}
+body{font-family:'GR',sans-serif;background:var(--bg);color:var(--navy);font-size:15px;min-height:100vh}
+
+/* ── NAV ── */
+.nav{background:var(--wh);border-bottom:1px solid var(--bd);height:62px;display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:200;box-shadow:var(--sh)}
+.nav-logo{height:38px;cursor:pointer}
+.nav-back{display:flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:var(--i3);text-decoration:none;border:1.5px solid var(--bd);padding:6px 12px;border-radius:9px;transition:all .12s}
+.nav-back:hover{border-color:var(--navy);color:var(--navy)}
+.nav-sp{flex:1}
+.nav-secure{display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:var(--green-dk);background:#F0FDF4;border:1px solid #BBF7D0;padding:6px 12px;border-radius:9px}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{background:var(--wh);border-bottom:1px solid var(--bd);padding:16px 24px}
+.progress-inner{max-width:780px;margin:0 auto}
+.steps{display:flex;align-items:center;gap:0}
+.step{flex:1;display:flex;align-items:center;gap:0;position:relative}
+.step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0;z-index:1;transition:all .25s;border:2px solid var(--bd);background:var(--wh);color:var(--i3)}
+.step.done .step-circle{background:var(--green);border-color:var(--green);color:#fff}
+.step.active .step-circle{background:var(--or);border-color:var(--or);color:#fff;box-shadow:0 0 0 4px rgba(245,130,31,.15)}
+.step-label{margin-left:8px;font-size:.72rem;font-weight:700;color:var(--i3);white-space:nowrap}
+.step.active .step-label{color:var(--navy);font-weight:900}
+.step.done .step-label{color:var(--green-dk)}
+.step-line{flex:1;height:2px;background:var(--bd);margin:0 8px;transition:background .25s}
+.step.done + .step > .step-line,
+.step-line.done{background:var(--green)}
+
+/* ── LAYOUT ── */
+.page{max-width:1100px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+
+/* ── ADIM PANELLER ── */
+.step-panel{display:none}
+.step-panel.active{display:block}
+
+/* KART */
+.card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r4);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+.card-head{padding:18px 22px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.card-head-ic{font-size:1.1rem}
+.card-head-t{font-size:.92rem;font-weight:900;color:var(--navy)}
+.card-head-s{font-size:.72rem;color:var(--i3);margin-top:1px}
+.card-body{padding:20px 22px}
+
+/* ── ADIM 1: ÖZET ── */
+.res-hotel{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}
+.res-hotel-img{width:90px;height:70px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.res-hotel-name{font-size:1rem;font-weight:900;color:var(--navy)}
+.res-hotel-cat{font-size:.68rem;font-weight:700;color:var(--tdk);background:var(--tlt);padding:2px 8px;border-radius:50px;border:1px solid #B2EBEA;display:inline-block;margin-top:4px}
+.res-hotel-loc{font-size:.72rem;color:var(--i3);margin-top:4px;display:flex;align-items:center;gap:4px}
+
+.res-rows{display:flex;flex-direction:column;gap:10px}
+.res-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:var(--bg);border-radius:10px;border:1px solid var(--bd)}
+.res-row-l{display:flex;align-items:center;gap:8px}
+.res-row-ic{font-size:.95rem;width:24px;text-align:center}
+.res-row-t{font-size:.78rem;font-weight:700;color:var(--i3)}
+.res-row-v{font-size:.82rem;font-weight:900;color:var(--navy);text-align:right}
+.res-row-sub{font-size:.65rem;color:var(--i3);text-align:right;margin-top:2px}
+
+.szl-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.szl-chip{background:var(--or);color:#fff;font-size:.72rem;font-weight:800;padding:4px 10px;border-radius:7px}
+
+.price-breakdown{margin-top:16px;padding:14px;background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1px solid #BBF7D0;border-radius:12px}
+.pb-row{display:flex;justify-content:space-between;font-size:.78rem;color:var(--i2);padding:3px 0}
+.pb-row.total{font-size:.95rem;font-weight:900;color:var(--navy);padding-top:10px;margin-top:6px;border-top:1px solid #BBF7D0}
+.pb-row.total span:last-child{color:var(--green-dk)}
+
+.policy-box{margin-top:14px;padding:12px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;font-size:.72rem;color:#92400E;line-height:1.55}
+.policy-box b{color:#78350F}
+
+/* ── ADIM 2: KİŞİ BİLGİLERİ ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:.7rem;font-weight:800;color:var(--i3);text-transform:uppercase;letter-spacing:.07em}
+.fg input,.fg select{border:1.5px solid var(--bd);border-radius:10px;padding:11px 14px;font-size:.85rem;font-family:'GR',sans-serif;color:var(--navy);outline:none;transition:border .12s;background:var(--wh)}
+.fg input:focus,.fg select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,186,181,.1)}
+.fg input.err{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.1)}
+.fg-hint{font-size:.65rem;color:var(--i3);margin-top:2px}
+.fg-err{font-size:.65rem;color:#EF4444;display:none}
+.fg input.err + .fg-err{display:block}
+
+.guests-list{display:flex;flex-direction:column;gap:12px}
+.guest-block{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:14px 16px}
+.guest-title{font-size:.75rem;font-weight:900;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.guest-title span{background:var(--or);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900}
+
+.kvkk{display:flex;align-items:flex-start;gap:10px;padding:14px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.72rem;color:#1E40AF;line-height:1.55;cursor:pointer}
+.kvkk input[type=checkbox]{width:16px;height:16px;accent-color:var(--teal);flex-shrink:0;margin-top:2px;cursor:pointer}
+.kvkk a{color:var(--tdk);font-weight:700}
+
+/* ── ADIM 3: ÖDEME ── */
+.pay-methods{display:flex;gap:8px;margin-bottom:18px}
+.pay-method{flex:1;border:2px solid var(--bd);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all .15s}
+.pay-method:hover{border-color:var(--teal)}
+.pay-method.on{border-color:var(--teal);background:var(--tlt)}
+.pay-method-ic{font-size:1.4rem;margin-bottom:4px}
+.pay-method-t{font-size:.72rem;font-weight:800;color:var(--navy)}
+.pay-method-s{font-size:.62rem;color:var(--i3);margin-top:1px}
+
+.iyzico-wrap{background:linear-gradient(135deg,#F8FAFF,#EEF2FF);border:2px dashed #C7D2FE;border-radius:16px;padding:28px;text-align:center}
+.iyzico-logo{font-size:1.8rem;margin-bottom:8px}
+.iyzico-title{font-size:.92rem;font-weight:900;color:#3730A3;margin-bottom:4px}
+.iyzico-sub{font-size:.72rem;color:#6366F1;margin-bottom:18px}
+.iyzico-card-form{max-width:340px;margin:0 auto;display:flex;flex-direction:column;gap:12px;text-align:left}
+.iyzico-field{border:1.5px solid #C7D2FE;border-radius:10px;padding:11px 14px;font-size:.85rem;font-family:'GR',sans-serif;color:var(--navy);outline:none;width:100%;background:#fff;transition:border .12s}
+.iyzico-field:focus{border-color:#6366F1;box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+.iyzico-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.iyzico-badge{display:inline-flex;align-items:center;gap:5px;font-size:.65rem;font-weight:700;color:#15803D;background:#F0FDF4;border:1px solid #BBF7D0;padding:4px 10px;border-radius:50px;margin-top:6px}
+
+.pay-alts{display:flex;gap:10px;margin-top:14px}
+.pay-alt{flex:1;border:1.5px solid var(--bd);border-radius:12px;padding:14px;cursor:pointer;text-align:center;background:var(--wh);transition:all .15s}
+.pay-alt:hover{border-color:var(--navy);transform:translateY(-1px)}
+.pay-alt-ic{font-size:1.5rem;margin-bottom:5px}
+.pay-alt-t{font-size:.72rem;font-weight:800;color:var(--navy)}
+.pay-alt-s{font-size:.62rem;color:var(--i3)}
+
+.pay-secure-strip{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px;padding:10px;background:#F9FAFB;border-radius:10px}
+.pay-sec-item{display:flex;align-items:center;gap:5px;font-size:.65rem;font-weight:700;color:var(--i3)}
+
+/* ── ADIM 4: QR ONAY ── */
+.success-hero{text-align:center;padding:28px 20px 20px}
+.success-ic{font-size:4rem;margin-bottom:12px;animation:bounceIn .5s ease}
+@keyframes bounceIn{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.success-title{font-size:1.3rem;font-weight:900;color:var(--navy);margin-bottom:6px}
+.success-sub{font-size:.82rem;color:var(--i3)}
+.success-code{font-size:1.5rem;font-weight:900;color:var(--tdk);letter-spacing:.15em;background:var(--tlt);padding:8px 20px;border-radius:10px;display:inline-block;margin-top:12px;border:1px solid #B2EBEA}
+
+.qr-wrap{text-align:center;padding:20px}
+.qr-box{width:200px;height:200px;margin:0 auto 14px;background:var(--wh);border:3px solid var(--navy);border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.qr-inner{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;padding:14px;width:100%;height:100%}
+.qr-cell{border-radius:1px}
+.qr-label{font-size:.75rem;font-weight:700;color:var(--i3)}
+
+.conf-details{display:flex;flex-direction:column;gap:8px;padding:0 22px 20px}
+.conf-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg);border-radius:9px}
+.conf-row-l{font-size:.75rem;color:var(--i3);display:flex;align-items:center;gap:7px}
+.conf-row-v{font-size:.78rem;font-weight:800;color:var(--navy)}
+
+.action-btns{display:flex;gap:10px;padding:0 22px 22px}
+.btn-dl{flex:1;background:var(--navy);color:#fff;border:none;border-radius:11px;padding:13px;font-size:.82rem;font-weight:800;cursor:pointer;font-family:'GR',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .12s}
+.btn-dl:hover{background:var(--tdk)}
+.btn-share{background:var(--wh);color:var(--navy);border:1.5px solid var(--bd);border-radius:11px;padding:13px 18px;font-size:.82rem;font-weight:800;cursor:pointer;font-family:'GR',sans-serif;transition:all .12s}
+.btn-share:hover{border-color:var(--navy)}
+
+/* ── SAĞ SIDEBAR ── */
+.sidebar{position:sticky;top:76px;display:flex;flex-direction:column;gap:14px}
+.sum-card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r4);box-shadow:var(--sh);overflow:hidden}
+.sum-img{width:100%;height:140px;object-fit:cover;display:block}
+.sum-body{padding:16px}
+.sum-name{font-size:.95rem;font-weight:900;color:var(--navy);margin-bottom:4px}
+.sum-meta{font-size:.7rem;color:var(--i3);margin-bottom:12px;display:flex;align-items:center;gap:5px}
+.sum-rows{display:flex;flex-direction:column;gap:7px}
+.sum-row{display:flex;justify-content:space-between;font-size:.75rem}
+.sum-row-l{color:var(--i3)}
+.sum-row-v{font-weight:800;color:var(--navy)}
+.sum-divider{border:none;border-top:1px solid var(--bd);margin:10px 0}
+.sum-total{display:flex;justify-content:space-between;font-size:.95rem;font-weight:900;color:var(--navy)}
+.sum-total-v{color:var(--green-dk)}
+
+.trust-strip{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r3);padding:14px;display:flex;flex-direction:column;gap:8px}
+.trust-item{display:flex;align-items:center;gap:9px;font-size:.72rem;color:var(--i2)}
+.trust-ic{font-size:1rem;width:22px;text-align:center}
+
+/* ── NAV BUTON ── */
+.nav-actions{display:flex;gap:10px;margin-top:20px}
+.btn-primary{background:var(--or);color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:.88rem;font-weight:900;cursor:pointer;font-family:'GR',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px;width:100%;justify-content:center}
+.btn-primary:hover{background:#DC6C10;transform:translateY(-1px)}
+.btn-primary:disabled{background:#D1D5DB;cursor:not-allowed;transform:none}
+.btn-secondary{background:var(--wh);color:var(--navy);border:1.5px solid var(--bd);border-radius:12px;padding:14px 20px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'GR',sans-serif;transition:all .12s}
+.btn-secondary:hover{border-color:var(--navy)}
+
+/* ── MOBİL ── */
+@media(max-width:1024px){
+  .page{grid-template-columns:1fr}
+  .sidebar{position:static;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sum-img{height:100px}
+}
+@media(max-width:768px){
+  .page{padding:16px 12px 60px}
+  .progress-wrap{padding:12px 14px}
+  .step-label{display:none}
+  .step.active .step-label{display:block;font-size:.68rem}
+  .form-grid{grid-template-columns:1fr}
+  .fg.full{grid-column:auto}
+  .sidebar{grid-template-columns:1fr}
+  .pay-methods{flex-direction:column}
+  .action-btns{flex-direction:column}
+  .nav{padding:0 14px}
+  .nav-secure span:not(:first-child){display:none}
+  .iyzico-row{grid-template-columns:1fr}
+  .pay-alts{flex-direction:column}
+}
+@supports(padding:max(0px)){
+  .nav{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  body{padding-bottom:env(safe-area-inset-bottom)}
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+var cur = 1;
+var total = 4;
+
+// Rezervasyon verisi (tesis-detay'dan gelecek)
+var RES = {
+  hotel: 'Zuzuu Beach Hotel',
+  cat: 'Beach Club',
+  loc: 'Yalıkavak, Bodrum',
+  dateIn: '15 Temmuz 2025',
+  dateOut: '17 Temmuz 2025',
+  days: 2,
+  szlongs: ['A3', 'A4'],
+  pax: 2,
+  unitPrice: 1250,
+  get total() { return this.days * this.szlongs.length * this.unitPrice; }
+};
+
+/* ── ADIM GEÇİŞİ ── */
+window.goStep = function(n) {
+  if(n < 1 || n > total) return;
+  // Adım 2 → validasyon
+  if(cur === 2 && n === 3) {
+    if(!validateForm()) return;
+  }
+  document.getElementById('panel' + cur).classList.remove('active');
+  document.getElementById('panel' + n).classList.add('active');
+  cur = n;
+  updateProgress();
+  updateSidebar();
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
+function updateProgress() {
+  for(var i=1; i<=total; i++) {
+    var step = document.getElementById('step'+i);
+    var line = document.getElementById('line'+i);
+    step.classList.remove('active','done');
+    if(i < cur) step.classList.add('done');
+    else if(i === cur) step.classList.add('active');
+    if(line) line.classList.toggle('done', i < cur);
+  }
+}
+
+/* ── FORM VALİDASYON ── */
+function validateForm() {
+  var ok = true;
+  ['inp-name','inp-surname','inp-phone','inp-email'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if(!el || !el.value.trim()) {
+      el.classList.add('err');
+      ok = false;
+    } else {
+      el.classList.remove('err');
+    }
+  });
+  var kvkk = document.getElementById('kvkkCheck');
+  if(!kvkk.checked) {
+    document.getElementById('kvkkErr').style.display = 'block';
+    ok = false;
+  } else {
+    document.getElementById('kvkkErr').style.display = 'none';
+  }
+  if(!ok) {
+    document.querySelector('.fg input.err') && document.querySelector('.fg input.err').focus();
+  }
+  return ok;
+}
+
+// Input hata temizleme
+document.querySelectorAll('.fg input').forEach(function(inp) {
+  inp.addEventListener('input', function() { this.classList.remove('err'); });
+});
+
+/* ── ÖDEME YÖNTEMİ ── */
+window.selectPayMethod = function(id) {
+  document.querySelectorAll('.pay-method').forEach(function(m) { m.classList.remove('on'); });
+  document.getElementById(id).classList.add('on');
+  document.getElementById('iyzicoForm').style.display = id === 'pm-card' ? 'block' : 'none';
+  document.getElementById('payAlts').style.display   = id !== 'pm-card' ? 'flex' : 'none';
+};
+
+/* ── QR OLUŞTUR ── */
+function buildQR() {
+  var grid = document.getElementById('qrGrid');
+  grid.innerHTML = '';
+  var pattern = [
+    1,1,1,1,1,1,1,0,1,0,
+    1,0,0,0,0,0,1,0,0,1,
+    1,0,1,1,1,0,1,0,1,0,
+    1,0,1,1,1,0,1,0,0,1,
+    1,0,1,1,1,0,1,0,1,1,
+    1,0,0,0,0,0,1,0,0,0,
+    1,1,1,1,1,1,1,0,1,0,
+    0,0,0,0,0,0,0,0,1,1,
+    1,0,1,1,0,1,0,1,0,1,
+    0,1,0,0,1,0,1,0,1,0
+  ];
+  pattern.forEach(function(v) {
+    var cell = document.createElement('div');
+    cell.className = 'qr-cell';
+    cell.style.background = v ? 'var(--navy)' : '#fff';
+    grid.appendChild(cell);
+  });
+}
+
+/* ── SİDEBAR GÜNCELLE ── */
+function updateSidebar() {
+  // Adım 4'te özet sidebar'ı güncelle
+  if(cur === 4) {
+    var name = (document.getElementById('inp-name').value || '') + ' ' + (document.getElementById('inp-surname').value || '');
+    document.getElementById('confName').textContent = name.trim() || 'Misafir';
+    buildQR();
+  }
+}
+
+/* ── YAZDIRMA / İNDİRME ── */
+window.downloadTicket = function() {
+  window.print();
+};
+
+window.shareTicket = function() {
+  if(navigator.share) {
+    navigator.share({title:'MyLoungers Rezervasyonum', text:'Rezervasyon kodu: MYL-2025-7842', url:window.location.href});
+  } else {
+    navigator.clipboard && navigator.clipboard.writeText('MYL-2025-7842');
+    alert('Rezervasyon kodu kopyalandı: MYL-2025-7842');
+  }
+};
+
+// İlk adımı başlat
+updateProgress();
+updateSidebar();
+
+});
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="tesis-zuzu.html"><img class="nav-logo" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_1" alt="MyLoungers"></a>
+  <a href="tesis-zuzu.html" class="nav-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Tesis Detay
+  </a>
+  <span class="nav-sp"></span>
+  <div class="nav-secure">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    <span>Güvenli Ödeme</span>
+  </div>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="steps">
+      <div class="step active" id="step1">
+        <div class="step-circle">1</div>
+        <div class="step-label">Özet</div>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step" id="step2">
+        <div class="step-circle">2</div>
+        <div class="step-label">Kişi Bilgileri</div>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step" id="step3">
+        <div class="step-circle">3</div>
+        <div class="step-label">Ödeme</div>
+      </div>
+      <div class="step-line" id="line3"></div>
+      <div class="step" id="step4">
+        <div class="step-circle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="step-label">Onay</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SAYFA -->
+<div class="page">
+
+  <!-- SOL: ADIMLAR -->
+  <div>
+
+    <!-- ══ ADIM 1: ÖZET ══ -->
+    <div class="step-panel active" id="panel1">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-head-ic">🏖️</span>
+          <div><div class="card-head-t">Rezervasyon Özeti</div><div class="card-head-s">Devam etmeden önce bilgileri kontrol edin</div></div>
+        </div>
+        <div class="card-body">
+          <div class="res-hotel">
+            <img class="res-hotel-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_2" alt="Zuzuu">
+            <div>
+              <div class="res-hotel-name">Zuzuu Beach Hotel</div>
+              <span class="res-hotel-cat">Beach Club</span>
+              <div class="res-hotel-loc">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Yalıkavak, Bodrum
+              </div>
+            </div>
+          </div>
+
+          <div class="res-rows">
+            <div class="res-row">
+              <div class="res-row-l"><span class="res-row-ic">📅</span><span class="res-row-t">Tarih Aralığı</span></div>
+              <div><div class="res-row-v" id="od-tarih">15 – 17 Temmuz 2025</div><div class="res-row-sub" id="od-gun">2 gece</div></div>
+            </div>
+            <div class="res-row">
+              <div class="res-row-l"><span class="res-row-ic">👥</span><span class="res-row-t">Kişi Sayısı</span></div>
+              <div><div class="res-row-v" id="od-kisi">2 Kişi</div></div>
+            </div>
+            <div class="res-row">
+              <div class="res-row-l"><span class="res-row-ic">🛏</span><span class="res-row-t">Seçilen Şezlonglar</span></div>
+              <div>
+                <div class="szl-chips">
+                  <span class="szl-chip">A3</span>
+                  <span class="szl-chip">A4</span>
+                </div>
+                <div class="res-row-sub" style="margin-top:5px">İskele Bölgesi · Sıra A</div>
+              </div>
+            </div>
+            <div class="res-row">
+              <div class="res-row-l"><span class="res-row-ic">💰</span><span class="res-row-t">Birim Fiyat</span></div>
+              <div><div class="res-row-v" id="od-fiyat">₺1.250 / gün</div><div class="res-row-sub">/ şezlong</div></div>
+            </div>
+          </div>
+
+          <div class="price-breakdown">
+            <div class="pb-row"><span>2 şezlong × 2 gün</span><span>4 rezervasyon</span></div>
+            <div class="pb-row"><span>Birim fiyat</span><span>₺1.250</span></div>
+            <div class="pb-row"><span>Ara toplam</span><span>₺5.000</span></div>
+            <div class="pb-row"><span>Hizmet bedeli</span><span style="color:var(--green-dk)">Ücretsiz</span></div>
+            <div class="pb-row total"><span>Toplam</span><span><span id="od-toplam">₺5.000</span></span></div>
+          </div>
+
+          <div class="policy-box">
+            🔄 <b>Ücretsiz İptal:</b> Rezervasyon tarihinden 24 saat öncesine kadar ücretsiz iptal hakkınız bulunmaktadır.
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn-primary" onclick="goStep(2)">
+          Kişi Bilgilerine Geç
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ ADIM 2: KİŞİ BİLGİLERİ ══ -->
+    <div class="step-panel" id="panel2">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-head-ic">👤</span>
+          <div><div class="card-head-t">Kişi Bilgileri</div><div class="card-head-s">İletişim ve giriş bilgileri</div></div>
+        </div>
+        <div class="card-body">
+
+          <!-- Misafir 1 -->
+          <div class="guests-list">
+            <div class="guest-block">
+              <div class="guest-title"><span>1</span> 1. Misafir (Hesap Sahibi)</div>
+              <div class="form-grid">
+                <div class="fg">
+                  <label>Ad *</label>
+                  <input type="text" id="inp-name" placeholder="Adınız">
+                  <span class="fg-err">Bu alan zorunludur</span>
+                </div>
+                <div class="fg">
+                  <label>Soyad *</label>
+                  <input type="text" id="inp-surname" placeholder="Soyadınız">
+                  <span class="fg-err">Bu alan zorunludur</span>
+                </div>
+                <div class="fg">
+                  <label>Telefon *</label>
+                  <input type="tel" id="inp-phone" placeholder="05XX XXX XX XX">
+                  <span class="fg-err">Geçerli bir telefon girin</span>
+                </div>
+                <div class="fg">
+                  <label>E-posta *</label>
+                  <input type="email" id="inp-email" placeholder="ornek@mail.com">
+                  <span class="fg-err">Geçerli bir e-posta girin</span>
+                </div>
+                <div class="fg full">
+                  <label>TC Kimlik No (opsiyonel)</label>
+                  <input type="text" id="inp-tc" placeholder="Tesis girişi için gerekebilir" maxlength="11">
+                  <span class="fg-hint">Bazı tesisler giriş için TC kimlik numarası istemektedir</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Misafir 2 -->
+            <div class="guest-block">
+              <div class="guest-title"><span>2</span> 2. Misafir</div>
+              <div class="form-grid">
+                <div class="fg">
+                  <label>Ad</label>
+                  <input type="text" placeholder="Adı">
+                </div>
+                <div class="fg">
+                  <label>Soyad</label>
+                  <input type="text" placeholder="Soyadı">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px">
+            <div class="fg full" style="margin-bottom:12px">
+              <label>Özel İstek (opsiyonel)</label>
+              <input type="text" placeholder="Gölgelik tercih, erken giriş vb.">
+            </div>
+            <label class="kvkk" for="kvkkCheck">
+              <input type="checkbox" id="kvkkCheck">
+              <span><a href="#">Kullanım Koşulları</a>'nı ve <a href="#">KVKK Aydınlatma Metni</a>'ni okudum, onaylıyorum. Rezervasyon bilgilerimin işlenmesine izin veriyorum.</span>
+            </label>
+            <div id="kvkkErr" style="display:none;font-size:.65rem;color:#EF4444;margin-top:4px">Devam etmek için onay vermeniz gerekmektedir</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-actions" style="display:flex;gap:10px">
+        <button class="btn-secondary" onclick="goStep(1)">← Geri</button>
+        <button class="btn-primary" onclick="goStep(3)">
+          Ödemeye Geç
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ ADIM 3: ÖDEME ══ -->
+    <div class="step-panel" id="panel3">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-head-ic">💳</span>
+          <div><div class="card-head-t">Ödeme</div><div class="card-head-s">Güvenli ödeme · SSL şifreli</div></div>
+        </div>
+        <div class="card-body">
+
+          <!-- Ödeme yöntemi seç -->
+          <div style="font-size:.7rem;font-weight:800;color:var(--i3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Ödeme Yöntemi</div>
+          <div class="pay-methods">
+            <div class="pay-method on" id="pm-card" onclick="selectPayMethod('pm-card')">
+              <div class="pay-method-ic">💳</div>
+              <div class="pay-method-t">Kredi / Banka Kartı</div>
+              <div class="pay-method-s">Visa, MC, Troy</div>
+            </div>
+            <div class="pay-method" id="pm-taksit" onclick="selectPayMethod('pm-taksit')">
+              <div class="pay-method-ic">📅</div>
+              <div class="pay-method-t">Taksit</div>
+              <div class="pay-method-s">3–12 taksit</div>
+            </div>
+            <div class="pay-method" id="pm-eft" onclick="selectPayMethod('pm-eft')">
+              <div class="pay-method-ic">🏦</div>
+              <div class="pay-method-t">EFT / Havale</div>
+              <div class="pay-method-s">Banka transferi</div>
+            </div>
+          </div>
+
+          <!-- iyzico Form -->
+          <div id="iyzicoForm">
+            <div class="iyzico-wrap">
+              <div class="iyzico-logo">🔒</div>
+              <div class="iyzico-title">iyzico Güvenli Ödeme</div>
+              <div class="iyzico-sub">Ödeme bilgileriniz 256-bit SSL ile korunmaktadır</div>
+              <div class="iyzico-card-form">
+                <input class="iyzico-field" type="text" placeholder="Kart Üzerindeki İsim" maxlength="40">
+                <input class="iyzico-field" type="text" placeholder="Kart Numarası" maxlength="19" oninput="this.value=this.value.replace(/[^0-9 ]/g,'').replace(/(.{4})/g,'$1 ').trim()">
+                <div class="iyzico-row">
+                  <input class="iyzico-field" type="text" placeholder="AA/YY" maxlength="5" oninput="this.value=this.value.replace(/[^0-9/]/g,'')">
+                  <input class="iyzico-field" type="text" placeholder="CVV" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                </div>
+                <div style="text-align:center">
+                  <span class="iyzico-badge">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                    256-bit SSL · PCI DSS Uyumlu
+                  </span>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:center;gap:10px;margin-top:14px;opacity:.6">
+                <span style="font-size:1.4rem">💳</span><span style="font-size:1.4rem">🏦</span><span style="font-size:.75rem;font-weight:800;color:#1E40AF;align-self:center">TROY</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alternatif yöntemler -->
+          <div class="pay-alts" id="payAlts" style="display:none">
+            <div class="pay-alt">
+              <div class="pay-alt-ic">🏦</div>
+              <div class="pay-alt-t">Garanti BBVA</div>
+              <div class="pay-alt-s">TR12 0006 2000...</div>
+            </div>
+            <div class="pay-alt">
+              <div class="pay-alt-ic">🏦</div>
+              <div class="pay-alt-t">İş Bankası</div>
+              <div class="pay-alt-s">TR98 0006 4000...</div>
+            </div>
+            <div class="pay-alt">
+              <div class="pay-alt-ic">🏦</div>
+              <div class="pay-alt-t">Yapı Kredi</div>
+              <div class="pay-alt-s">TR45 0006 7010...</div>
+            </div>
+          </div>
+
+          <div class="pay-secure-strip">
+            <div class="pay-sec-item"><span>🔒</span> SSL Şifreli</div>
+            <div class="pay-sec-item"><span>🛡️</span> 3D Secure</div>
+            <div class="pay-sec-item"><span>↩️</span> Ücretsiz İptal</div>
+            <div class="pay-sec-item"><span>✅</span> Anında Onay</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-actions" style="display:flex;gap:10px">
+        <button class="btn-secondary" onclick="goStep(2)">← Geri</button>
+        <button class="btn-primary" onclick="goStep(4)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span id="od-btn-fiyat">₺5.000</span> Öde ve Rezervasyonu Tamamla
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ ADIM 4: QR ONAY ══ -->
+    <div class="step-panel" id="panel4">
+      <div class="card">
+        <div class="success-hero">
+          <div class="success-ic">🎉</div>
+          <div class="success-title">Rezervasyonunuz Onaylandı!</div>
+          <div class="success-sub">Tesis girişinde QR kodunuzu gösterin</div>
+          <div class="success-code">MYL-2025-7842</div>
+        </div>
+
+        <div class="qr-wrap">
+          <div class="qr-box">
+            <div class="qr-inner" id="qrGrid"></div>
+          </div>
+          <div class="qr-label">QR kodu tesis girişinde okutun</div>
+        </div>
+
+        <div class="conf-details">
+          <div class="conf-row">
+            <span class="conf-row-l">🏖️ Tesis</span>
+            <span class="conf-row-v">Zuzuu Beach Hotel</span>
+          </div>
+          <div class="conf-row">
+            <span class="conf-row-l">📅 Tarih</span>
+            <span class="conf-row-v">15 – 17 Temmuz 2025</span>
+          </div>
+          <div class="conf-row">
+            <span class="conf-row-l">🛏 Şezlong</span>
+            <span class="conf-row-v">A3, A4 · İskele</span>
+          </div>
+          <div class="conf-row">
+            <span class="conf-row-l">👤 Misafir</span>
+            <span class="conf-row-v" id="confName">—</span>
+          </div>
+          <div class="conf-row">
+            <span class="conf-row-l">💰 Ödenen</span>
+            <span class="conf-row-v" style="color:var(--green-dk)">₺5.000 ✓</span>
+          </div>
+        </div>
+
+        <div class="action-btns">
+          <button class="btn-dl" onclick="downloadTicket()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Bileti İndir / Yazdır
+          </button>
+          <button class="btn-share" onclick="shareTicket()">📤 Paylaş</button>
+        </div>
+
+        <div style="padding:0 22px 22px;display:flex;gap:10px">
+          <a href="myloungers-v33-fixed.html" style="flex:1;background:var(--bg);border:1.5px solid var(--bd);border-radius:11px;padding:12px;font-size:.78rem;font-weight:700;color:var(--navy);text-decoration:none;text-align:center;transition:all .12s;font-family:'GR',sans-serif">🏠 Ana Sayfaya Dön</a>
+          <a href="tesis-zuzu.html" style="flex:1;background:var(--tlt);border:1.5px solid #B2EBEA;border-radius:11px;padding:12px;font-size:.78rem;font-weight:700;color:var(--tdk);text-decoration:none;text-align:center;font-family:'GR',sans-serif">🏖️ Tesise Git</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SAĞ: SİDEBAR -->
+  <div class="sidebar">
+    <div class="sum-card">
+      <img class="sum-img" src="data:image/jpeg;base64,PLACEHOLDER_IMAGE_3" alt="Zuzuu">
+      <div class="sum-body">
+        <div class="sum-name">Zuzuu Beach Hotel</div>
+        <div class="sum-meta">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Yalıkavak, Bodrum · Beach Club
+        </div>
+        <div class="sum-rows">
+          <div class="sum-row"><span class="sum-row-l">📅 Tarih</span><span class="sum-row-v">15–17 Tem</span></div>
+          <div class="sum-row"><span class="sum-row-l">🛏 Şezlong</span><span class="sum-row-v">A3, A4</span></div>
+          <div class="sum-row"><span class="sum-row-l">👥 Kişi</span><span class="sum-row-v">2 kişi</span></div>
+          <div class="sum-row"><span class="sum-row-l">📆 Süre</span><span class="sum-row-v">2 gün</span></div>
+        </div>
+        <hr class="sum-divider">
+        <div class="sum-total">
+          <span>Toplam</span>
+          <span class="sum-total-v">₺5.000</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust-strip">
+      <div class="trust-item"><span class="trust-ic">🔒</span> SSL şifreli güvenli ödeme</div>
+      <div class="trust-item"><span class="trust-ic">↩️</span> 24 saate kadar ücretsiz iptal</div>
+      <div class="trust-item"><span class="trust-ic">✅</span> Anında rezervasyon onayı</div>
+      <div class="trust-item"><span class="trust-ic">📱</span> QR ile temassız giriş</div>
+      <div class="trust-item"><span class="trust-ic">🎧</span> 7/24 müşteri desteği</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── SESSION'DAN VERİ OKU ──
+(function(){
+  try {
+    var tesis  = sessionStorage.getItem('ml_tesis')  || 'Zuzuu Beach Hotel';
+    var tarih  = sessionStorage.getItem('ml_tarih')  || '15 – 17 Temmuz 2025';
+    var gun    = sessionStorage.getItem('ml_gun')    || '2';
+    var szl    = sessionStorage.getItem('ml_szl')    || '—';
+    var kisi   = sessionStorage.getItem('ml_kisi')   || '2';
+    var toplam = sessionStorage.getItem('ml_toplam') || '5000';
+
+    var set = function(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; };
+    set('od-tarih', tarih);
+    set('od-gun', gun + ' gün');
+    set('od-kisi', kisi + ' Kişi');
+    set('od-toplam', '₺' + parseInt(toplam).toLocaleString('tr-TR'));
+    set('od-btn-fiyat', '₺' + parseInt(toplam).toLocaleString('tr-TR'));
+
+    // Şezlong chip'lerini oluştur
+    var chipWrap = document.querySelector('.szl-chips');
+    if(chipWrap && szl && szl !== '—') {
+      chipWrap.innerHTML = '';
+      szl.split(', ').forEach(function(s){
+        var chip = document.createElement('span');
+        chip.className = 'szl-chip';
+        chip.textContent = s;
+        chipWrap.appendChild(chip);
+      });
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

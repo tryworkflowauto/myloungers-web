@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Giriş Yap — MyLoungers</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0A1628;--teal:#0ABAB5;--teal-lt:#E0F7F6;--teal-dk:#089490;
+  --orange:#F5821F;--ink:#111;--ink2:#444;--ink3:#777;
+  --border:#E5EBF0;--soft:#F4F8FB;--r:10px;--rl:16px;
+  --sh:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.08)
+}
+body{font-family:'Inter',sans-serif;background:var(--soft);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+/* ── LAYOUT ── */
+.page{flex:1;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(135deg,#0A1628 0%,#0d2040 40%,#0a2535 70%,#071520 100%);position:relative;overflow:hidden}
+.page::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(10,186,181,.12) 0%,transparent 70%);pointer-events:none}
+.page::after{content:'';position:absolute;bottom:-150px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(245,130,31,.07) 0%,transparent 70%);pointer-events:none}
+
+
+/* ── SAĞ PANEL ── */
+.right{display:flex;align-items:center;justify-content:center;width:100%;position:relative;z-index:1}
+.card-wrap{width:100%;max-width:440px;position:relative;z-index:1}
+.card-logo{text-align:center;margin-bottom:20px}
+.card-logo img{height:90px;width:auto}
+.card{width:100%;background:#fff;border-radius:20px;padding:36px 40px 40px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.card-top{text-align:center;margin-bottom:28px}
+.card-top h1{font-size:1.4rem;font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
+.card-top p{font-size:.8rem;color:var(--ink3)}
+.tabs{display:flex;background:var(--soft);border-radius:var(--r);padding:3px;margin-bottom:24px}
+.tab{flex:1;padding:8px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;color:var(--ink3);background:none;cursor:pointer;transition:all .18s}
+.tab.on{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+/* Social butonlar */
+.socials{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.soc-btn{width:100%;padding:11px 16px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.83rem;font-weight:600;color:var(--ink);background:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;position:relative}
+.soc-btn:hover{border-color:#aaa;background:var(--soft)}
+.soc-ico{width:20px;height:20px;flex-shrink:0}
+.soc-btn span{flex:1;text-align:center}
+.soc-badge{position:absolute;right:12px;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:50px}
+.soc-badge.pop{background:#FFF3E0;color:#E65100}
+
+.divider{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{font-size:.72rem;color:var(--ink3);font-weight:500;white-space:nowrap}
+
+/* Form */
+.pane{display:none}.pane.on{display:block}
+.fg{margin-bottom:13px}
+.fl{display:block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:4px}
+.finput{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.83rem;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;background:#fff}
+.finput:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,186,181,.1)}
+.finput::placeholder{color:var(--ink3)}
+.pw-wrap{position:relative}
+.pw-wrap .finput{padding-right:40px}
+.pw-eye{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink3);padding:2px;display:flex}
+.pw-eye svg{width:16px;height:16px}
+.forgot{font-size:.74rem;color:var(--teal-dk);font-weight:600;text-decoration:none;display:block;text-align:right;margin-top:-6px;margin-bottom:14px}
+.forgot:hover{color:var(--navy)}
+.btn-main{width:100%;padding:12px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.88rem;font-weight:700;color:#fff;background:var(--navy);border:none;cursor:pointer;transition:background .15s;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-main:hover{background:#112240}
+.terms{font-size:.7rem;color:var(--ink3);text-align:center;line-height:1.6}
+.terms a{color:var(--teal-dk);text-decoration:none;font-weight:600}
+.switch-txt{text-align:center;font-size:.78rem;color:var(--ink3);margin-top:16px}
+.switch-txt a{color:var(--teal-dk);font-weight:700;text-decoration:none;cursor:pointer}
+
+/* Phone panel */
+.phone-wrap{display:flex;gap:7px}
+.phone-code{width:80px;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.83rem;color:var(--ink);outline:none;background:#fff;transition:border-color .15s;flex-shrink:0}
+.phone-code:focus{border-color:var(--teal)}
+
+/* OTP */
+.otp-wrap{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.otp-inp{width:44px;height:48px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);text-align:center;outline:none;transition:border-color .15s}
+.otp-inp:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,186,181,.1)}
+.otp-info{font-size:.74rem;color:var(--ink3);text-align:center;margin-bottom:16px}
+.otp-resend{font-size:.74rem;color:var(--teal-dk);font-weight:600;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* Back button */
+.btn-back{display:flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:16px;padding:0}
+.btn-back:hover{color:var(--ink)}
+.btn-back svg{width:14px;height:14px}
+.back-home{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;color:var(--ink3);text-decoration:none;margin-bottom:20px;padding:6px 10px;border-radius:var(--r);transition:all .15s;border:1.5px solid var(--border)}
+.back-home:hover{color:var(--navy);border-color:var(--navy);background:var(--soft)}
+
+/* Progress dots */
+.prog-dots{display:flex;gap:5px;justify-content:center;margin-bottom:20px}
+.pd{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all .2s}
+.pd.on{background:var(--teal);width:18px;border-radius:3px}
+
+/* Success */
+.success-screen{text-align:center;padding:20px 0}
+.success-ico{width:64px;height:64px;border-radius:50%;background:var(--teal-lt);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.success-screen h2{font-size:1.15rem;font-weight:800;margin-bottom:6px}
+.success-screen p{font-size:.79rem;color:var(--ink3);line-height:1.7;margin-bottom:20px}
+
+@media(max-width:768px){
+  .page{padding:16px}
+  .right{width:100%}
+  .card{padding:24px 18px}
+  .card-logo img{height:70px}
+  .card{max-width:100%}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- SAĞ PANEL -->
+  <div class="right">
+    <div class="card-wrap">
+      <div class="card-logo">
+        <img src="logo.png" alt="MyLoungers">
+      </div>
+    <div class="card">
+
+      <!-- ANA SAYFA BUTONU -->
+      <a href="myloungers-v33-fixed.html" class="back-home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Ana Sayfaya Dön
+      </a>
+
+
+
+      <!-- PANE: GİRİŞ/KAYIT SEÇİM -->
+      <div class="pane on" id="pMain">
+        <div class="card-top">
+          <h1>Hoş Geldin ☀️</h1>
+          <p>Giriş yap veya hızlıca kayıt ol</p>
+        </div>
+        <div class="tabs">
+          <button class="tab on" id="tabLogin" onclick="switchTab('login')">Giriş Yap</button>
+          <button class="tab" id="tabRegister" onclick="switchTab('register')">Kayıt Ol</button>
+        </div>
+
+        <!-- Sosyal Giriş -->
+        <div class="socials">
+          <button class="soc-btn" onclick="socialLogin('google')">
+            <svg class="soc-ico" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            <span>Google ile devam et</span>
+            <span class="soc-badge pop">Popüler</span>
+          </button>
+          <button class="soc-btn" onclick="socialLogin('apple')">
+            <svg class="soc-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            <span>Apple ile devam et</span>
+          </button>
+          <button class="soc-btn" onclick="socialLogin('phone')">
+            <svg class="soc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.22 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 14.92z"/></svg>
+            <span>Telefon ile devam et</span>
+          </button>
+        </div>
+
+        <div class="divider"><span>veya e-posta ile</span></div>
+
+        <!-- Login formu -->
+        <div id="loginForm">
+          <div class="fg">
+            <label class="fl">E-posta</label>
+            <input class="finput" type="email" placeholder="ornek@email.com" id="loginEmail"/>
+          </div>
+          <div class="fg">
+            <label class="fl">Şifre</label>
+            <div class="pw-wrap">
+              <input class="finput" type="password" placeholder="••••••••" id="loginPass"/>
+              <button class="pw-eye" onclick="togglePw('loginPass',this)" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <a href="#" class="forgot" onclick="showPane('pForgot');return false">Şifremi unuttum →</a>
+          <button class="btn-main" onclick="doLogin()">Giriş Yap →</button>
+          <div class="terms">Devam ederek <a href="#">Kullanım Koşulları</a>'nı kabul etmiş olursun.</div>
+        </div>
+
+        <!-- Register formu -->
+        <div id="registerForm" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" class="fg">
+            <div><label class="fl">Ad</label><input class="finput" type="text" placeholder="Adın" id="regName"/></div>
+            <div><label class="fl">Soyad</label><input class="finput" type="text" placeholder="Soyadın" id="regSurname"/></div>
+          </div>
+          <div class="fg">
+            <label class="fl">E-posta</label>
+            <input class="finput" type="email" placeholder="ornek@email.com" id="regEmail"/>
+          </div>
+          <div class="fg">
+            <label class="fl">Şifre</label>
+            <div class="pw-wrap">
+              <input class="finput" type="password" placeholder="En az 8 karakter" id="regPass"/>
+              <button class="pw-eye" onclick="togglePw('regPass',this)" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <button class="btn-main" style="margin-bottom:10px" onclick="doRegister()">Kayıt Ol →</button>
+          <div class="terms">Kayıt olarak <a href="#">Kullanım Koşulları</a> ve <a href="#">Gizlilik Politikası</a>'nı kabul etmiş olursun.</div>
+        </div>
+      </div>
+
+      <!-- PANE: TELEFON OTP -->
+      <div class="pane" id="pPhone">
+        <button class="btn-back" onclick="showPane('pMain')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Geri
+        </button>
+        <div class="prog-dots"><div class="pd on"></div><div class="pd"></div></div>
+        <div class="card-top">
+          <h1>Telefon ile Giriş</h1>
+          <p>SMS ile doğrulama kodu gönderilecek</p>
+        </div>
+        <div class="fg">
+          <label class="fl">Telefon Numarası</label>
+          <div class="phone-wrap">
+            <select class="phone-code" id="phoneCode">
+              <option value="+90">🇹🇷 +90</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+7">🇷🇺 +7</option>
+            </select>
+            <input class="finput" type="tel" placeholder="5XX XXX XX XX" id="phoneNumber" style="flex:1"/>
+          </div>
+        </div>
+        <button class="btn-main" onclick="sendOtp()">SMS Kodu Gönder →</button>
+        <div class="terms">Telefon numaranı sadece doğrulama için kullanırız.</div>
+      </div>
+
+      <!-- PANE: OTP GİRİŞ -->
+      <div class="pane" id="pOtp">
+        <button class="btn-back" onclick="showPane('pPhone')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Geri
+        </button>
+        <div class="prog-dots"><div class="pd"></div><div class="pd on"></div></div>
+        <div class="card-top">
+          <h1>Kodu Gir</h1>
+          <p id="otpDesc">Telefonuna gelen 6 haneli kodu gir</p>
+        </div>
+        <div class="otp-wrap">
+          <input class="otp-inp" type="text" maxlength="1" id="otp1" oninput="otpNext(this,'otp2')"/>
+          <input class="otp-inp" type="text" maxlength="1" id="otp2" oninput="otpNext(this,'otp3')"/>
+          <input class="otp-inp" type="text" maxlength="1" id="otp3" oninput="otpNext(this,'otp4')"/>
+          <input class="otp-inp" type="text" maxlength="1" id="otp4" oninput="otpNext(this,'otp5')"/>
+          <input class="otp-inp" type="text" maxlength="1" id="otp5" oninput="otpNext(this,'otp6')"/>
+          <input class="otp-inp" type="text" maxlength="1" id="otp6" oninput="otpNext(this,null)"/>
+        </div>
+        <div class="otp-info">Kod gelmedi mi? <button class="otp-resend" onclick="resendOtp()">Tekrar gönder</button></div>
+        <button class="btn-main" onclick="verifyOtp()">Doğrula →</button>
+      </div>
+
+      <!-- PANE: ŞİFREMİ UNUTTUM -->
+      <div class="pane" id="pForgot">
+        <button class="btn-back" onclick="showPane('pMain')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Geri
+        </button>
+        <div class="card-top">
+          <h1>Şifreni Sıfırla</h1>
+          <p>E-postana sıfırlama bağlantısı gönderelim</p>
+        </div>
+        <div class="fg">
+          <label class="fl">E-posta Adresi</label>
+          <input class="finput" type="email" placeholder="ornek@email.com" id="forgotEmail"/>
+        </div>
+        <button class="btn-main" onclick="sendReset()">Sıfırlama Linki Gönder →</button>
+      </div>
+
+      <!-- PANE: BAŞARILI -->
+      <div class="pane" id="pSuccess">
+        <div class="success-screen">
+          <div class="success-ico">🎉</div>
+          <h2 id="successTitle">Hoş Geldin!</h2>
+          <p id="successDesc">Hesabın oluşturuldu. Şimdi şezlong rezervasyonu yapabilirsin!</p>
+          <button class="btn-main" onclick="window.location.href='myloungers-v33-fixed.html'" style="max-width:220px;margin:0 auto">
+            Ana Sayfaya Git →
+          </button>
+          <div style="margin-top:12px;font-size:.75rem;color:var(--ink3)">veya <a href="#" style="color:var(--teal-dk);font-weight:600">profil ayarlarını tamamla</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+// URL'de ?tab=register varsa kayıt sekmesini aç
+window.addEventListener('DOMContentLoaded', function() {
+  if(window.location.search.includes('tab=register')) {
+    switchTab('register');
+  }
+});
+function showPane(id){
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+}
+function switchTab(t){
+  document.getElementById('tabLogin').classList.toggle('on',t==='login');
+  document.getElementById('tabRegister').classList.toggle('on',t==='register');
+  document.getElementById('loginForm').style.display=t==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=t==='register'?'block':'none';
+}
+function togglePw(id,btn){
+  var inp=document.getElementById(id);
+  inp.type=inp.type==='password'?'text':'password';
+}
+function socialLogin(provider){
+  if(provider==='phone'){showPane('pPhone');return;}
+  showSuccess(provider==='google'?'Google':'Apple');
+}
+function doLogin(){
+  var e=document.getElementById('loginEmail').value;
+  var p=document.getElementById('loginPass').value;
+  if(!e||!p){alert('Lütfen e-posta ve şifreni gir.');return;}
+  showSuccess('E-posta');
+}
+function doRegister(){
+  var n=document.getElementById('regName').value;
+  var e=document.getElementById('regEmail').value;
+  var p=document.getElementById('regPass').value;
+  if(!n||!e||!p){alert('Lütfen tüm alanları doldur.');return;}
+  if(p.length<8){alert('Şifre en az 8 karakter olmalı.');return;}
+  showSuccess('E-posta');
+}
+function sendOtp(){
+  var ph=document.getElementById('phoneNumber').value;
+  if(!ph){alert('Lütfen telefon numaranı gir.');return;}
+  var code=document.getElementById('phoneCode').value;
+  document.getElementById('otpDesc').textContent=code+' '+ph+' numarasına gönderildi';
+  showPane('pOtp');
+  document.getElementById('otp1').focus();
+}
+function otpNext(inp,nextId){
+  if(inp.value&&nextId){document.getElementById(nextId).focus();}
+  var all=['otp1','otp2','otp3','otp4','otp5','otp6'];
+  var full=all.every(function(id){return document.getElementById(id).value;});
+  if(full)verifyOtp();
+}
+function verifyOtp(){showSuccess('Telefon');}
+function resendOtp(){alert('Kod yeniden gönderildi!');}
+function sendReset(){
+  var e=document.getElementById('forgotEmail').value;
+  if(!e){alert('Lütfen e-posta adresini gir.');return;}
+  alert('Sıfırlama bağlantısı '+e+' adresine gönderildi!');
+  showPane('pMain');
+}
+function showSuccess(method){
+  document.getElementById('successTitle').textContent='Hoş Geldin! 🎉';
+  document.getElementById('successDesc').textContent=method+' ile başarıyla giriş yapıldı. Şimdi tatilini planlamaya başla!';
+  showPane('pSuccess');
+}
+</script>
+</body>
+</html>
